@@ -25,6 +25,10 @@
         "alphalaneous.alphas_geode_utils": {
             "importance": "required",
             "version": ">=1.1.0"
+        },
+        "prevter.imageplus": {
+            "importance": "recommended",
+            "version": ">=1.0.0"
         }
     },
     "links": {

@@ -20,6 +20,8 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             sprite->setLoadCallback([=](Result<> res) {
                 if (res.isOk()) {
                     log::info("loaded branding sprite");
+
+                    sprite->setScale(0.875f);
                     sprite->setOpacity(125);
                     sprite->setAnchorPoint({ 1, 0 });
                     sprite->setPosition({ md->getScaledContentWidth(), 0.f });
