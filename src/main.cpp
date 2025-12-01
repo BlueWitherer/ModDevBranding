@@ -7,6 +7,10 @@ using namespace geode::prelude;
 namespace str = utils::string;
 
 class $nodeModify(BrandingModPopup, ModPopup) {
+    struct Fields {
+        bool m_useWebP = Loader::get()->isModLoaded("prevter.imageplus");
+    };
+
     void modify() {
         auto username = getGitUsername();
         log::info("git user {}", username);
@@ -32,8 +36,13 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 };
                                     });
 
-            // change this to use moddev.arcticwoof.xyz/api when ready
-            if (username.size() > 0) sprite->loadFromUrl("https://i.imgur.com/LOpGTtV.png");
+            // change this to use moddev.arcticwoof.xyz/api... when ready
+            auto url = "https://i.imgur.com/LOpGTtV.png";
+            auto query = "?fmt=webp";
+
+            auto reqUrl = fmt::format("{}{}", url, m_fields->m_useWebP ? query : "");
+
+            if (username.size() > 0) sprite->loadFromUrl(reqUrl.c_str());
             if (sprite) md->addChild(sprite);
         } else {
             log::error("couldn't find mod desc container");
