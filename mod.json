@@ -1,0 +1,38 @@
+{
+    "geode": "4.10.0",
+    "gd": {
+        "win": "2.2074",
+        "android": "2.2074",
+        "mac": "2.2074",
+        "ios": "2.2074"
+    },
+    "id": "cheeseworks.moddevbranding",
+    "name": "Mod Developer Branding",
+    "version": "1.0.0",
+    "developer": "Cheeseworks",
+    "description": "Developer branding on mod info popups.",
+    "tags": [
+        "offline",
+        "enhancement"
+    ],
+    "dependencies": {
+        "geode.node-ids": {
+            "importance": "required",
+            "version": ">=1.21.0"
+        },
+        "alphalaneous.alphas_geode_utils": {
+            "importance": "required",
+            "version": ">=1.1.0"
+        }
+    },
+    "links": {
+        "source": "https://github.com/BlueWitherer/ModDevBranding",
+        "homepage": "https://www.cheeseworks.gay/",
+        "community": "https://www.dsc.gg/cubic"
+    },
+    "issues": {
+        "info": "Report any issues to our repository!",
+        "url": "https://www.github.com/BlueWitherer/ModDevBranding/issues/"
+    },
+    "early-load": false
+}
