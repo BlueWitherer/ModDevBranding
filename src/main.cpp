@@ -30,6 +30,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 };
                                     });
 
+            // change this to use moddev.arcticwoof.xyz/api when ready
             if (username.size() > 0) sprite->loadFromUrl("https://i.imgur.com/LOpGTtV.png");
             if (sprite) md->addChild(sprite);
         } else {

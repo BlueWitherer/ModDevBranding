@@ -9,10 +9,12 @@
     "id": "cheeseworks.moddevbranding",
     "name": "Mod Developer Branding",
     "version": "1.0.0",
-    "developer": "Cheeseworks",
+    "developers": [
+        "Cheeseworks"
+    ],
     "description": "Developer branding on mod info popups.",
     "tags": [
-        "offline",
+        "online",
         "enhancement"
     ],
     "dependencies": {
@@ -27,7 +29,7 @@
     },
     "links": {
         "source": "https://github.com/BlueWitherer/ModDevBranding",
-        "homepage": "https://www.cheeseworks.gay/",
+        "homepage": "https://moddev.arcticwoof.xyz/",
         "community": "https://www.dsc.gg/cubic"
     },
     "issues": {
