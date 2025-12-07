@@ -36,7 +36,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 };
                                     });
 
-            // change this to use moddev.arcticwoof.xyz/api... when ready
+            // change this to use moddev.cubicstudios.xyz/api... when ready
             auto url = "https://i.imgur.com/LOpGTtV.png";
             auto query = "?fmt=webp";
 
