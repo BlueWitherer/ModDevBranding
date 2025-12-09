@@ -39,6 +39,11 @@
         "info": "Report any issues to my repository!",
         "url": "https://www.github.com/BlueWitherer/ModDevBranding/issues/"
     },
+    "api": {
+        "include": [
+            "include/*.hpp"
+        ]
+    },
     "settings": {
         "timeout": {
             "type": "float",
