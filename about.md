@@ -21,3 +21,4 @@ If you're a mod developer, visit **[moddev.arcticwoof.xyz](https://moddev.arctic
 
 ### Credits
 - **[ArcticWoof](user:7689052)**: Designed website frontend
+- **[Alphalaneous](user:1139015)**: Original [Mod Developer Branding](https://www.github.com/Alphalaneous/ModDevBranding/) project

@@ -13,14 +13,36 @@ BrandingManager::BrandingManager() {
 
 BrandingManager::~BrandingManager() {};
 
-void BrandingManager::registerBrand(std::string_view developer, std::string_view image, BrandImageType type) {};
+std::vector<Branding> BrandingManager::getBrands() const {
+    return m_impl->m_brands;
+};
 
-void BrandingManager::registerBrandURL(std::string_view developer, std::string_view url) {};
-void BrandingManager::registerBrandSprite(std::string_view developer, std::string_view spriteName) {};
-void BrandingManager::registerBrandSpriteFrame(std::string_view developer, std::string_view spriteFrameName) {};
+bool BrandingManager::doesBrandExist(std::string_view developer) const {
+    for (const auto& brand : getBrands()) {
+        if (brand.developer == developer) return true;
+    };
 
-BrandingManager::Branding BrandingManager::getBrand(std::string_view developer) const {
-    return Branding("", "");
+    return false;
+};
+
+void BrandingManager::registerBrand(const std::string& developer, const std::string& image, BrandImageType type) {
+    if (doesBrandExist(developer)) {
+        log::error("Could not register branding for {} because one already exists!", developer);
+    } else {
+        m_impl->m_brands.push_back(Branding(
+            image,
+            developer,
+            type
+        ));
+    };
+};
+
+Branding BrandingManager::getBrand(std::string_view developer) const {
+    for (const auto& brand : getBrands()) {
+        if (brand.developer == developer) return brand;
+    };
+
+    return Branding("", std::string(developer));
 };
 
 BrandingManager* BrandingManager::get() {

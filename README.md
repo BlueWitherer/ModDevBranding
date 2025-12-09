@@ -27,6 +27,7 @@ If you're a mod developer, visit **[moddev.cubicstudios.xyz](https://moddev.cubi
 
 ### Credits
 - **[ArcticWoof](https://www.github.com/DumbCaveSpider/)**: Designed website frontend
+- **[Alphalaneous](https://www.github.com/Alphalaneous/)**: Original [Mod Developer Branding](https://www.github.com/Alphalaneous/ModDevBranding/) project
 
 ---
 

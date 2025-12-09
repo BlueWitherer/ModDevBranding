@@ -15,6 +15,24 @@
 using namespace geode::prelude;
 
 namespace branding {
+    enum class MODDEVBRANDING_API_DLL BrandImageType {
+        URL = 0,
+        Sprite = 1,
+        SpriteFrame = 2
+    };
+
+    struct Branding {
+        std::string image;
+        std::string developer;
+        BrandImageType type = BrandImageType::Sprite;
+
+        Branding(
+            std::string i,
+            std::string d,
+            BrandImageType t = BrandImageType::Sprite
+        ) : image(i), developer(d), type(t) {};
+    };
+
     class MODDEVBRANDING_API_DLL BrandingManager : public CCObject {
     protected:
         class Impl;
@@ -23,33 +41,15 @@ namespace branding {
         BrandingManager();
         virtual ~BrandingManager();
 
-        enum class BrandImageType {
-            URL = 0,
-            Sprite = 1,
-            SpriteFrame = 2
-        };
-
-        struct Branding {
-            std::string image;
-            std::string developer;
-            BrandImageType type = BrandImageType::Sprite;
-
-            Branding(
-                std::string i,
-                std::string d,
-                BrandImageType t = BrandImageType::Sprite
-            ) : image(i), developer(d), type(t) {};
-        };
-
-        void registerBrand(std::string_view developer, std::string_view image, BrandImageType type = BrandImageType::Sprite);
+        std::vector<Branding> getBrands() const;
 
     public:
         static BrandingManager* get();
 
-        void registerBrandURL(std::string_view developer, std::string_view url);
-        void registerBrandSprite(std::string_view developer, std::string_view spriteName);
-        void registerBrandSpriteFrame(std::string_view developer, std::string_view spriteFrameName);
+        void registerBrand(const std::string& developer, const std::string& image, BrandImageType type = BrandImageType::Sprite);
 
         Branding getBrand(std::string_view developer) const;
+
+        bool doesBrandExist(std::string_view developer) const;
     };
 };

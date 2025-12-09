@@ -1,16 +1,17 @@
+#include "BrandingNode.hpp"
+
+#include <Branding.hpp>
+
 #include <Geode/Geode.hpp>
 
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
 using namespace geode::prelude;
+using namespace branding;
 
 namespace str = utils::string;
 
 class $nodeModify(BrandingModPopup, ModPopup) {
-    struct Fields {
-        bool m_useWebP = Loader::get()->isModLoaded("prevter.imageplus");
-    };
-
     void modify() {
         auto username = getGitUsername();
         log::info("git user {}", username);
@@ -18,32 +19,10 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         if (auto md = getChildByIDRecursive("textarea")) {
             log::info("found mod desc container");
 
-            auto sprite = LazySprite::create(md->getScaledContentSize(), false);
-            sprite->setID("branding"_spr);
+            auto branding = BrandingNode::create(md, username);
+            branding->setZOrder(-9);
 
-            sprite->setLoadCallback([=](Result<> res) {
-                if (res.isOk()) {
-                    log::info("loaded branding sprite");
-
-                    sprite->setScale(0.875f);
-                    sprite->setOpacity(125);
-                    sprite->setAnchorPoint({ 1, 0 });
-                    sprite->setPosition({ md->getScaledContentWidth(), 0.f });
-                    sprite->setZOrder(-9);
-                } else {
-                    log::error("failed to load branding sprite");
-                    sprite->removeMeAndCleanup();
-                };
-                                    });
-
-            // change this to use moddev.cubicstudios.xyz/api... when ready
-            auto url = "https://i.imgur.com/LOpGTtV.png";
-            auto query = "?fmt=webp";
-
-            auto reqUrl = fmt::format("{}{}", url, m_fields->m_useWebP ? query : "");
-
-            if (username.size() > 0) sprite->loadFromUrl(reqUrl.c_str());
-            if (sprite) md->addChild(sprite);
+            md->addChild(branding);
         } else {
             log::error("couldn't find mod desc container");
         };

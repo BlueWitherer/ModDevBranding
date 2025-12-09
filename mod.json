@@ -14,7 +14,6 @@
     ],
     "description": "Developer branding on mod info popups.",
     "tags": [
-        "online",
         "enhancement"
     ],
     "dependencies": {
@@ -37,8 +36,27 @@
         "community": "https://www.dsc.gg/cubic"
     },
     "issues": {
-        "info": "Report any issues to our repository!",
+        "info": "Report any issues to my repository!",
         "url": "https://www.github.com/BlueWitherer/ModDevBranding/issues/"
+    },
+    "settings": {
+        "timeout": {
+            "type": "float",
+            "name": "Load Timeout",
+            "description": "Duration in seconds until the branding image cancels loading.",
+            "default": 5.0,
+            "min": 1.0,
+            "max": 45.0,
+            "control": {
+                "input": true,
+                "slider": true,
+                "slider-step": 1.0,
+                "arrows": true,
+                "arrow-step": 5.0,
+                "big-arrows": true,
+                "big-arrow-step": 15.0
+            }
+        }
     },
     "early-load": false
 }
