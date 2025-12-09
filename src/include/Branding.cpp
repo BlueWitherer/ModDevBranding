@@ -17,32 +17,32 @@ std::vector<Branding> BrandingManager::getBrands() const {
     return m_impl->m_brands;
 };
 
-bool BrandingManager::doesBrandExist(std::string_view developer) const {
+bool BrandingManager::doesBrandExist(std::string_view modId) const {
     for (const auto& brand : getBrands()) {
-        if (brand.developer == developer) return true;
+        if (brand.mod == modId) return true;
     };
 
     return false;
 };
 
-void BrandingManager::registerBrand(const std::string& developer, const std::string& image, BrandImageType type) {
-    if (doesBrandExist(developer)) {
-        log::error("Could not register branding for {} because one already exists!", developer);
+void BrandingManager::registerBrand(const std::string& modId, const std::string& image, BrandImageType type) {
+    if (doesBrandExist(modId)) {
+        log::error("Could not register branding for {} because one already exists!", modId);
     } else {
         m_impl->m_brands.push_back(Branding(
             image,
-            developer,
+            modId,
             type
         ));
     };
 };
 
-Branding BrandingManager::getBrand(std::string_view developer) const {
+Branding BrandingManager::getBrand(std::string_view modId) const {
     for (const auto& brand : getBrands()) {
-        if (brand.developer == developer) return brand;
+        if (brand.mod == modId) return brand;
     };
 
-    return Branding("", std::string(developer));
+    return Branding("", std::string(modId));
 };
 
 BrandingManager* BrandingManager::get() {

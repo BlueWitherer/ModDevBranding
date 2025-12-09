@@ -21,7 +21,9 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
     void modify() {
         auto username = getGitUsername();
-        log::info("git user {}", username);
+        auto modId = getModID();
+
+        log::debug("creating brand node for {} by {}", modId, username);
 
         if (auto md = static_cast<MDTextArea*>(getChildByIDRecursive("textarea"))) {
             log::info("found mod desc container");
@@ -29,7 +31,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             m_fields->m_textArea = md;
             m_fields->m_height = md->getScaledContentHeight();
 
-            m_fields->m_branding = BrandingNode::create(md, username);
+            m_fields->m_branding = BrandingNode::create(md, username, modId);
             m_fields->m_branding->setZOrder(-9);
 
             md->addChild(m_fields->m_branding);
@@ -50,14 +52,23 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 for (size_t i = 0; i < split.size(); i++) { // gh username
                     if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
                 };
-
-                return "";
-            } else {
-                return "";
             };
-        } else {
-            return "";
         };
+
+        return "";
+    };
+
+    std::string getModID() {
+        if (auto modPageBtn = getChildByIDRecursive("mod-online-page-button")) {
+            if (auto url = static_cast<CCString*>(modPageBtn->getUserObject("url"))) {
+                std::string urlStr = url->getCString();
+                std::string urlGeode = "https://geode-sdk.org/mods/";
+
+                if (str::startsWith(urlStr, urlGeode)) return urlStr.erase(0, urlGeode.size());
+            };
+        };
+
+        return "";
     };
 
     void updateBrandSize(float) {

@@ -13,15 +13,15 @@ protected:
     BrandingNode();
     virtual ~BrandingNode();
 
-    Branding brand(std::string_view developer) const;
+    Branding brand(std::string_view modId) const;
     bool useLocalBrand() const;
 
     void cancelRemoteLoad(CCNode* sender);
 
-    bool init(MDTextArea* container, std::string_view developer);
+    bool init(MDTextArea* container, std::string_view dev, std::string_view modId);
 
 public:
-    static BrandingNode* create(MDTextArea* container, std::string_view developer);
+    static BrandingNode* create(MDTextArea* container, std::string_view dev, std::string_view modId = GEODE_MOD_ID);
 
     void loadBrand();
 };

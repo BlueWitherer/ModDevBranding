@@ -10,6 +10,7 @@ using namespace branding;
 class BrandingNode::Impl final {
 public:
     Branding m_brand = Branding("", "");
+    std::string developer = "";
 
     Ref<MDTextArea> m_container = nullptr;
 
@@ -23,14 +24,15 @@ BrandingNode::BrandingNode() {
 
 BrandingNode::~BrandingNode() {};
 
-bool BrandingNode::init(MDTextArea* container, std::string_view developer) {
-    m_impl->m_brand = brand(developer);
+bool BrandingNode::init(MDTextArea* container, std::string_view dev, std::string_view modId) {
+    m_impl->m_brand = brand(modId);
+    m_impl->developer = dev;
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;
 
     // no dev no brand
-    if (developer.empty()) return false;
+    if (modId.empty()) return false;
 
     setID("branding"_spr);
     setAnchorPoint({ 1, 0 });
@@ -46,12 +48,12 @@ void BrandingNode::loadBrand() {
     setContentSize(m_impl->m_container->getScaledContentSize());
     removeAllChildrenWithCleanup(true);
 
-    log::debug("loading brand for developer {}", m_impl->m_brand.developer);
+    log::debug("loading brand for mod {}", m_impl->m_brand.mod);
 
     LazySprite* lazySprite = nullptr;
 
     if (useLocalBrand()) {
-        log::debug("using local brand for developer {}", m_impl->m_brand.developer);
+        log::debug("using local brand for mod {}", m_impl->m_brand.mod);
 
         CCSprite* sprite = nullptr;
 
@@ -90,7 +92,7 @@ void BrandingNode::loadBrand() {
             log::error("no branding sprite created");
         };
     } else {
-        log::debug("using remote brand for developer {}", m_impl->m_brand.developer);
+        log::debug("using remote brand for mod {}", m_impl->m_brand.mod);
         lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize());
     };
 
@@ -116,13 +118,12 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
-        // change this to use moddev.cubicstudios.xyz/api... when ready
-        auto url = "https://i.imgur.com/LOpGTtV.png";
+        auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
         auto query = "&fmt=webp";
 
-        auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        auto reqUrl = m_impl->m_brand.image.empty() ? fmt::format("{}{}", url, m_impl->m_useWebP ? query : "") : m_impl->m_brand.image;
 
-        if (m_impl->m_brand.developer.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
+        if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
         if (lazySprite) addChild(lazySprite);
 
         // cancel load after timeout
@@ -142,19 +143,19 @@ void BrandingNode::cancelRemoteLoad(CCNode* sender) {
     if (auto lazySprite = static_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
 };
 
-Branding BrandingNode::brand(std::string_view developer) const {
-    if (auto bm = BrandingManager::get()) return bm->getBrand(developer);
-    return Branding("", std::string(developer));
+Branding BrandingNode::brand(std::string_view modId) const {
+    if (auto bm = BrandingManager::get()) return bm->getBrand(modId);
+    return Branding("", std::string(modId));
 };
 
 bool BrandingNode::useLocalBrand() const {
-    if (auto bm = BrandingManager::get()) return bm->doesBrandExist(m_impl->m_brand.developer);
+    if (auto bm = BrandingManager::get()) return bm->doesBrandExist(m_impl->m_brand.mod);
     return false;
 };
 
-BrandingNode* BrandingNode::create(MDTextArea* container, std::string_view developer) {
+BrandingNode* BrandingNode::create(MDTextArea* container, std::string_view dev, std::string_view modId) {
     auto ret = new BrandingNode();
-    if (ret->init(container, developer)) {
+    if (ret->init(container, dev, modId)) {
         ret->autorelease();
         return ret;
     };
