@@ -16,12 +16,12 @@ protected:
     Branding brand(std::string_view developer) const;
     bool useLocalBrand() const;
 
-    void loadBrand();
-
     void cancelRemoteLoad(CCNode* sender);
 
-    bool init(CCNode* container, std::string_view developer);
+    bool init(MDTextArea* container, std::string_view developer);
 
 public:
-    static BrandingNode* create(CCNode* container, std::string_view developer);
+    static BrandingNode* create(MDTextArea* container, std::string_view developer);
+
+    void loadBrand();
 };

@@ -12,17 +12,29 @@ using namespace branding;
 namespace str = utils::string;
 
 class $nodeModify(BrandingModPopup, ModPopup) {
+    struct Fields {
+        Ref<MDTextArea> m_textArea = nullptr;
+        Ref<BrandingNode> m_branding = nullptr;
+
+        float m_height = 0.f;
+    };
+
     void modify() {
         auto username = getGitUsername();
         log::info("git user {}", username);
 
-        if (auto md = getChildByIDRecursive("textarea")) {
+        if (auto md = static_cast<MDTextArea*>(getChildByIDRecursive("textarea"))) {
             log::info("found mod desc container");
 
-            auto branding = BrandingNode::create(md, username);
-            branding->setZOrder(-9);
+            m_fields->m_textArea = md;
+            m_fields->m_height = md->getScaledContentHeight();
 
-            md->addChild(branding);
+            m_fields->m_branding = BrandingNode::create(md, username);
+            m_fields->m_branding->setZOrder(-9);
+
+            md->addChild(m_fields->m_branding);
+
+            schedule(schedule_selector(BrandingModPopup::updateBrandSize));
         } else {
             log::error("couldn't find mod desc container");
         };
@@ -45,6 +57,17 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             };
         } else {
             return "";
+        };
+    };
+
+    void updateBrandSize(float) {
+        if (m_fields->m_branding && m_fields->m_textArea) {
+            if (m_fields->m_height != m_fields->m_textArea->getScaledContentHeight()) {
+                m_fields->m_branding->loadBrand();
+                m_fields->m_height = m_fields->m_textArea->getScaledContentHeight();
+            };
+        } else {
+            unschedule(schedule_selector(BrandingModPopup::updateBrandSize));
         };
     };
 };

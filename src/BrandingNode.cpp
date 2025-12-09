@@ -11,7 +11,7 @@ class BrandingNode::Impl final {
 public:
     Branding m_brand = Branding("", "");
 
-    Ref<CCNode> m_container = nullptr;
+    Ref<MDTextArea> m_container = nullptr;
 
     float m_timeout = static_cast<float>(Mod::get()->getSettingValue<double>("timeout"));
     bool m_useWebP = Loader::get()->isModLoaded("prevter.imageplus");
@@ -23,16 +23,19 @@ BrandingNode::BrandingNode() {
 
 BrandingNode::~BrandingNode() {};
 
-bool BrandingNode::init(CCNode* container, std::string_view developer) {
+bool BrandingNode::init(MDTextArea* container, std::string_view developer) {
     m_impl->m_brand = brand(developer);
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;
 
+    // no dev no brand
+    if (developer.empty()) return false;
+
     setID("branding"_spr);
     setAnchorPoint({ 1, 0 });
     setContentSize(container->getScaledContentSize());
-    setPosition({ m_impl->m_container->getScaledContentWidth(), 0.f });
+    setPosition({ container->getScaledContentWidth(), 0.f });
 
     loadBrand();
 
@@ -40,6 +43,7 @@ bool BrandingNode::init(CCNode* container, std::string_view developer) {
 };
 
 void BrandingNode::loadBrand() {
+    setContentSize(m_impl->m_container->getScaledContentSize());
     removeAllChildrenWithCleanup(true);
 
     log::debug("loading brand for developer {}", m_impl->m_brand.developer);
@@ -148,7 +152,7 @@ bool BrandingNode::useLocalBrand() const {
     return false;
 };
 
-BrandingNode* BrandingNode::create(CCNode* container, std::string_view developer) {
+BrandingNode* BrandingNode::create(MDTextArea* container, std::string_view developer) {
     auto ret = new BrandingNode();
     if (ret->init(container, developer)) {
         ret->autorelease();
