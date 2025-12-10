@@ -22,11 +22,5 @@ namespace branding {
             std::string const& image,
             BrandImageType type = BrandImageType::Sprite
         ) GEODE_EVENT_EXPORT(&BrandingManagerOpt::registerBrand, (modId, image, type));
-
-        static Result<Branding> getBrand(std::string_view modId)
-            GEODE_EVENT_EXPORT(&BrandingManagerOpt::getBrand, (modId));
-
-        static Result<BrandingManager*> get()
-            GEODE_EVENT_EXPORT(&BrandingManagerOpt::get, ());
     };
 };

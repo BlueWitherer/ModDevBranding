@@ -62,11 +62,3 @@ Result<> BrandingManagerOpt::registerBrand(
     BrandingManager::get()->registerBrand(modId, image, type);
     return Ok();
 };
-
-Result<Branding> BrandingManagerOpt::getBrand(std::string_view modId) {
-    return Ok(BrandingManager::get()->getBrand(modId));
-};
-
-Result<BrandingManager*> BrandingManagerOpt::get() {
-    return Ok(BrandingManager::get());
-};
