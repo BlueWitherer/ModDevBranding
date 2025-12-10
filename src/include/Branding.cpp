@@ -1,10 +1,12 @@
+#define GEODE_DEFINE_EVENT_EXPORTS
 #include <Branding.hpp>
+#include <OptionalAPI.hpp>
 
 using namespace branding;
 
 class BrandingManager::Impl final {
 public:
-    std::vector<Branding> m_brands = {};
+    std::vector<Branding> m_brands = {}; // Array of registered branding images
 };
 
 BrandingManager::BrandingManager() {
@@ -34,6 +36,8 @@ void BrandingManager::registerBrand(const std::string& modId, const std::string&
             modId,
             type
         ));
+
+        log::debug("Registered branding for {}", modId);
     };
 };
 
@@ -48,4 +52,21 @@ Branding BrandingManager::getBrand(std::string_view modId) const {
 BrandingManager* BrandingManager::get() {
     static auto inst = new BrandingManager();
     return inst;
+};
+
+Result<BrandingManager*> BrandingManagerOpt::get() {
+    return Ok(BrandingManager::get());
+};
+
+Result<> BrandingManagerOpt::registerBrand(
+    std::string const& modId,
+    std::string const& image,
+    BrandImageType type
+) {
+    BrandingManager::get()->registerBrand(modId, image, type);
+    return Ok();
+};
+
+Result<Branding> BrandingManagerOpt::getBrand(std::string_view modId) const {
+    return Ok(BrandingManager::get()->getBrand(modId));
 };

@@ -57,37 +57,48 @@ void BrandingNode::loadBrand() {
 
         CCSprite* sprite = nullptr;
 
+        log::debug("scanning brand image node type for {}...", m_impl->m_brand.mod);
         switch (m_impl->m_brand.type) {
-        case BrandImageType::Sprite:
-            sprite = CCSprite::create(m_impl->m_brand.image.c_str());
-
-        case BrandImageType::SpriteFrame:
-            sprite = CCSprite::createWithSpriteFrameName(m_impl->m_brand.image.c_str());
-
-        case BrandImageType::URL:
+        case BrandImageType::URL: {
+            log::debug("{} requested a url", m_impl->m_brand.mod);
             lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize());
+            break;
+        };
 
-        default:
-            sprite = nullptr;
-            lazySprite = nullptr;
+        case BrandImageType::Sprite: {
+            log::debug("{} requested a sprite", m_impl->m_brand.mod);
+            sprite = CCSprite::create(m_impl->m_brand.image.c_str());
+            break;
+        };
+
+        case BrandImageType::SpriteFrame: {
+            log::debug("{} requested a sprite frame", m_impl->m_brand.mod);
+            sprite = CCSprite::createWithSpriteFrameName(m_impl->m_brand.image.c_str());
+            break;
+        };
+
+        default: {
+            log::error("{} requested unknown image node type", m_impl->m_brand.mod);
+            return;
+        };
         };
 
         if (sprite) {
             log::debug("branding sprite found");
 
-            auto isYBigger = sprite->getScaledContentHeight() > sprite->getScaledContentWidth();
-
-            auto sprRes = isYBigger ? sprite->getScaledContentHeight() : sprite->getScaledContentWidth();
-            auto nodeRes = isYBigger ? m_impl->m_container->getScaledContentHeight() : m_impl->m_container->getScaledContentWidth();
-
-            sprite->setScale(nodeRes / sprRes);
-            sprite->setOpacity(125);
+            sprite->setID("brand"_spr);
+            sprite->setOpacity(100);
             sprite->setAnchorPoint({ 1, 0 });
             sprite->setPosition({ getScaledContentWidth(), 0.f });
 
-            log::info("loaded local branding sprite");
+            float scaleX = m_impl->m_container->getScaledContentWidth() / sprite->getScaledContentWidth();
+            float scaleY = m_impl->m_container->getScaledContentHeight() / sprite->getScaledContentHeight();
+
+            sprite->setScale(std::min(scaleX, scaleY));
 
             addChild(sprite);
+
+            log::info("loaded local branding sprite");
         } else {
             log::error("no branding sprite created");
         };
@@ -99,9 +110,9 @@ void BrandingNode::loadBrand() {
     if (lazySprite) {
         log::debug("branding lazysprite found");
 
-        lazySprite->setID("branding"_spr);
-        lazySprite->setAutoResize(true);
+        lazySprite->setID("brand"_spr);
         lazySprite->setOpacity(100);
+        lazySprite->setAutoResize(true);
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
@@ -109,7 +120,7 @@ void BrandingNode::loadBrand() {
             if (res.isOk()) {
                 log::info("loaded remote branding sprite");
 
-                lazySprite->setOpacity(125);
+                lazySprite->setOpacity(100);
                 lazySprite->setAnchorPoint({ 1, 0 });
                 lazySprite->setPosition({ getScaledContentWidth(), 0.f });
             } else {
@@ -122,6 +133,8 @@ void BrandingNode::loadBrand() {
         auto query = "&fmt=webp";
 
         auto reqUrl = m_impl->m_brand.image.empty() ? fmt::format("{}{}", url, m_impl->m_useWebP ? query : "") : m_impl->m_brand.image;
+
+        log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
 
         if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
         if (lazySprite) addChild(lazySprite);
