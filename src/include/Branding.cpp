@@ -59,6 +59,6 @@ Result<> BrandingManagerV2::registerBrand(
     std::string const& image,
     BrandImageTypeV2 type
 ) {
-    BrandingManager::get()->registerBrand(modId, image, static_cast<BrandImageType>(static_cast<int>(type)));
+    BrandingManager::get()->registerBrand(modId, image, static_cast<BrandImageType>(type));
     return Ok();
 };
