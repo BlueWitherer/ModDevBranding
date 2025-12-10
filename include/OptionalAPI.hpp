@@ -17,9 +17,6 @@ namespace branding {
     // Optional variant: slightly different name
     class BrandingManagerOpt {
     public:
-        static Result<BrandingManager*> get()
-            GEODE_EVENT_EXPORT(&BrandingManagerOpt::get, ());
-
         static Result<> registerBrand(
             std::string const& modId,
             std::string const& image,
@@ -28,5 +25,8 @@ namespace branding {
 
         static Result<Branding> getBrand(std::string_view modId)
             GEODE_EVENT_EXPORT(&BrandingManagerOpt::getBrand, (modId));
+
+        static Result<BrandingManager*> get()
+            GEODE_EVENT_EXPORT(&BrandingManagerOpt::get, ());
     };
 };
