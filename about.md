@@ -3,7 +3,7 @@
 
 *by [Cheeseworks](user:6408873)!*
 
-> ![icon](frame:collaborationIcon_001.png) <cg>*This mod has settings you can utilize to customize your experience.*</c>
+> ![✳️](frame:collaborationIcon_001.png) <cg>*This mod has settings you can utilize to customize your experience.*</c>
 
 ---
 
@@ -15,7 +15,12 @@ This mod adds a snazzy branding image from the main developer of a mod or the mo
 ### Submit Branding
 If you're a mod developer, head on over to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to submit your branding! It will automatically appear on all of your mods. <cr>You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.</c>
 
-> ![icon](frame:GJ_infoIcon_001.png?scale=0.5) <cj>*If you're not a **verified developer** on Geode, your branding will be put under a brief review process by our staff.*</c>
+> ![ℹ️](frame:GJ_infoIcon_001.png?scale=0.5) <cj>*If you're not a **verified developer** on Geode, your branding will be put under a brief review process by our staff.*</c>
+
+### Previewing
+You can use the **`Test Brand Image`** setting to preview your branding in-game to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
+
+> ![✳️](frame:collaborationIcon_001.png) <cg>*Recommended image resolution and ratio is `903px`x`777px` to properly fit branding UI container. Looks best when expanding from the bottom-right corner outwards!*</c>
 
 ---
 

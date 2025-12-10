@@ -45,6 +45,26 @@
         ]
     },
     "settings": {
+        "preview-image": {
+            "type": "file",
+            "name": "Test Brand Image",
+            "description": "Upload an image to test it out as branding on this mod's popup.",
+            "default": "",
+            "control": {
+                "dialog": "open",
+                "filters": [
+                    {
+                        "files": [
+                            "*.png",
+                            "*.jpg",
+                            "*.jpeg",
+                            "*.webp",
+                            "*.gif"
+                        ]
+                    }
+                ]
+            }
+        },
         "timeout": {
             "type": "float",
             "name": "Load Timeout",

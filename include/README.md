@@ -12,7 +12,7 @@ Let's start off by adding this mod as a dependency in your `mod.json`!
 }
 ```
 
-You can directly access the Horrible Ideas mod menu API by including the [`OptionalAPI.hpp`](OptionalAPI.hpp) file in your code. Make sure to include the **`branding`** namespace to directly access all needed classes and methods.
+You can directly access the Mod Developer Branding API by including the [`OptionalAPI.hpp`](OptionalAPI.hpp) file in your code. Make sure to include the **`branding`** namespace to directly access all needed classes and methods.
 ```cpp
 #include <cheeseworks.moddevbranding/include/OptionalAPI.hpp>
 

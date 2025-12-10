@@ -1,19 +1,12 @@
 #include "BrandingNode.hpp"
 
-#include <Branding.hpp>
-
 #include <Geode/Geode.hpp>
 
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
 using namespace geode::prelude;
-using namespace branding;
 
 namespace str = utils::string;
-
-$execute{
-    if (auto bm = BrandingManager::get()) bm->registerBrand(GEODE_MOD_ID, "https://moddev.cheeseworks.gay/cdn/main.webp", BrandImageType::URL);
-};
 
 class $nodeModify(BrandingModPopup, ModPopup) {
     struct Fields {

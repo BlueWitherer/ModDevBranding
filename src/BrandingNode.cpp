@@ -7,6 +7,8 @@
 using namespace geode::prelude;
 using namespace branding;
 
+namespace fs = std::filesystem;
+
 class BrandingNode::Impl final {
 public:
     Branding m_brand = Branding("", "");
@@ -50,9 +52,9 @@ void BrandingNode::loadBrand() {
 
     log::debug("loading brand for mod {}", m_impl->m_brand.mod);
 
-    auto localBrand = useLocalBrand();
     LazySprite* lazySprite = nullptr;
 
+    auto localBrand = useLocalBrand() && m_impl->m_brand.mod != GEODE_MOD_ID;
     if (localBrand) {
         log::debug("using local brand for mod {}", m_impl->m_brand.mod);
 
@@ -108,7 +110,7 @@ void BrandingNode::loadBrand() {
             log::error("no branding sprite created");
         };
     } else {
-        log::debug("using remote brand for mod {}", m_impl->m_brand.mod);
+        log::debug("using remote or test brand for mod {}", m_impl->m_brand.mod);
         lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize());
     };
 
@@ -122,7 +124,7 @@ void BrandingNode::loadBrand() {
 
         lazySprite->setLoadCallback([=](Result<> res) {
             if (res.isOk()) {
-                log::info("loaded remote branding sprite");
+                log::info("loaded remote or test branding sprite");
 
                 lazySprite->setOpacity(100);
                 lazySprite->setAnchorPoint({ 1, 0 });
@@ -141,6 +143,20 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
+        if (m_impl->m_brand.mod == GEODE_MOD_ID) {
+            log::debug("attempting to load local test brand image");
+
+            auto path = Mod::get()->getSettingValue<fs::path>("preview-image");
+            if (fs::exists(path)) {
+                lazySprite->loadFromFile(path, CCImage::kFmtUnKnown, true);
+                if (lazySprite) addChild(lazySprite);
+
+                return;
+            } else {
+                log::error("couldn't load local test brand image");
+            };
+        };
+
         std::string reqUrl = "";
 
         if (localBrand) {
@@ -153,7 +169,7 @@ void BrandingNode::loadBrand() {
         };
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
-        if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
+        if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str(), CCImage::kFmtUnKnown, m_impl->m_brand.mod == GEODE_MOD_ID);
         if (lazySprite) addChild(lazySprite);
 
         // cancel load after timeout

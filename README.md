@@ -23,6 +23,12 @@ If you're a mod developer, head on over to **[moddev.cheeseworks.gay](https://mo
 > [!NOTE]
 > *If you're not a **verified developer** on Geode, your branding will be put under a brief review process by our staff!*
 
+### Previewing
+You can use the **`Test Brand Image`** setting to preview your branding in-game to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
+
+> [!TIP]
+> *Recommended image resolution and ratio is `903px`x`777px` to properly fit branding UI container. Looks best when expanding from the bottom-right corner outwards!*
+
 ---
 
 ### Developers
