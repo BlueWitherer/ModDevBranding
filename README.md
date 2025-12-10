@@ -25,6 +25,26 @@ If you're a mod developer, visit **[moddev.cheeseworks.gay](https://moddev.chees
 
 ---
 
+### Developers
+Want to add branding for your mod specifically? You can register your very own branding by using this mod's optional API! You can see its [documentation here](./include).
+
+```cpp
+using namespace branding;
+
+$execute {
+    (void)[&]()->Result<> {
+        GEODE_UNWRAP(BrandingManagerOpt::registerBrand(
+            "me.mymod",
+            "my-sprite.png"_spr,
+            BrandImageType::SpriteFrame
+        ));
+        return Ok();
+    }();
+};
+```
+
+---
+
 ### Credits
 - **[ArcticWoof](https://www.github.com/DumbCaveSpider/)**: Designed branding dashboard website frontend
 - **[Alphalaneous](https://www.github.com/Alphalaneous/)**: Original [Mod Developer Branding](https://www.github.com/Alphalaneous/ModDevBranding/) project

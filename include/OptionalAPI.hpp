@@ -9,18 +9,15 @@
 #ifdef MY_MOD_ID
 #undef MY_MOD_ID
 #endif
-#define MY_MOD_ID "cheeseworks.moddevbranding"
+#define MY_MOD_ID GEODE_MOD_ID
 
 using namespace geode::prelude;
 
 namespace branding {
-    // Optional variant: slightly different name
+    // Optional variant of `BrandingManager`
     class BrandingManagerOpt {
     public:
-        static Result<> registerBrand(
-            std::string const& modId,
-            std::string const& image,
-            BrandImageType type = BrandImageType::Sprite
-        ) GEODE_EVENT_EXPORT(&BrandingManagerOpt::registerBrand, (modId, image, type));
+        static Result<> registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite)
+            GEODE_EVENT_EXPORT(&BrandingManagerOpt::registerBrand, (modId, image, type));
     };
 };

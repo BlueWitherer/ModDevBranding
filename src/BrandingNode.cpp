@@ -50,9 +50,10 @@ void BrandingNode::loadBrand() {
 
     log::debug("loading brand for mod {}", m_impl->m_brand.mod);
 
+    auto localBrand = useLocalBrand();
     LazySprite* lazySprite = nullptr;
 
-    if (useLocalBrand()) {
+    if (localBrand) {
         log::debug("using local brand for mod {}", m_impl->m_brand.mod);
 
         CCSprite* sprite = nullptr;
@@ -95,7 +96,10 @@ void BrandingNode::loadBrand() {
             float scaleX = m_impl->m_container->getScaledContentWidth() / sprite->getScaledContentWidth();
             float scaleY = m_impl->m_container->getScaledContentHeight() / sprite->getScaledContentHeight();
 
-            sprite->setScale(std::min(scaleX, scaleY));
+            float scale = std::min(scaleX, scaleY);
+            if (scale >= 1.0f) scale = 1.0f;
+
+            sprite->setScale(scale);
 
             addChild(sprite);
 
@@ -130,12 +134,11 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
-
         auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
         auto query = "&fmt=webp";
 
         auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
-        if (useLocalBrand()) reqUrl = m_impl->m_brand.image;
+        if (localBrand) reqUrl = m_impl->m_brand.image;
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
         if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
