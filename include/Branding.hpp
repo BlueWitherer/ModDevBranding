@@ -15,7 +15,7 @@
 using namespace geode::prelude;
 
 namespace branding {
-    enum class CW_MODDEVBRANDING_API_DLL BrandImageType {
+    enum class BrandImageType {
         URL = 0,
         Sprite = 1,
         SpriteFrame = 2
