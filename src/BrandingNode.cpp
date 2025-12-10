@@ -58,6 +58,7 @@ void BrandingNode::loadBrand() {
         CCSprite* sprite = nullptr;
 
         log::debug("scanning brand image node type for {}...", m_impl->m_brand.mod);
+        log::debug("{} uses {} as source image for branding", m_impl->m_brand.mod, m_impl->m_brand.image);
         switch (m_impl->m_brand.type) {
         case BrandImageType::URL: {
             log::debug("{} requested a url", m_impl->m_brand.mod);
@@ -129,13 +130,14 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
+
         auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
         auto query = "&fmt=webp";
 
-        auto reqUrl = m_impl->m_brand.image.empty() ? fmt::format("{}{}", url, m_impl->m_useWebP ? query : "") : m_impl->m_brand.image;
+        auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        if (useLocalBrand()) reqUrl = m_impl->m_brand.image;
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
-
         if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
         if (lazySprite) addChild(lazySprite);
 
