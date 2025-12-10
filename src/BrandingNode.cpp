@@ -136,9 +136,8 @@ void BrandingNode::loadBrand() {
 
         std::string reqUrl = "";
 
-        log::debug("branding for {} is {}", m_impl->m_brand.mod, localBrand ? "registered locally" : "registered remotely for developer");
         if (localBrand) {
-            reqUrl = std::move(m_impl->m_brand.image);
+            reqUrl = m_impl->m_brand.image;
         } else {
             auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
             auto query = "&fmt=webp";

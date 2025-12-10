@@ -75,6 +75,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         return "";
     };
 
+    // idk if theres events for mdtextarea size changes ;-;
     void updateBrandSize(float) {
         if (m_fields->m_branding && m_fields->m_textArea) {
             if (m_fields->m_height != m_fields->m_textArea->getScaledContentHeight()) {

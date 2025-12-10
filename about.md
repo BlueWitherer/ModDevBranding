@@ -20,7 +20,7 @@ If you're a mod developer, visit **[moddev.cheeseworks.gay](https://moddev.chees
 ---
 
 ### Developers
-Want to add branding for your mod specifically? You can register your very own branding by using this mod's optional API! You can see its [documentation here](https://www.github.com/BlueWitherer/ModDevBranding/tree/master/include/).
+Want to add branding for your mod specifically? You can register your very own branding by using this mod's optional API! You can see its [documentation here](https://www.github.com/BlueWitherer/ModDevBranding/tree/master/include/). Add some more style to your mods!
 
 ```cpp
 using namespace branding;
