@@ -134,11 +134,17 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
-        auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
-        auto query = "&fmt=webp";
+        std::string reqUrl = "";
 
-        auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
-        if (localBrand) reqUrl = m_impl->m_brand.image;
+        log::debug("branding for {} is {}", m_impl->m_brand.mod, localBrand ? "registered locally" : "registered remotely for developer");
+        if (localBrand) {
+            reqUrl = std::move(m_impl->m_brand.image);
+        } else {
+            auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
+            auto query = "&fmt=webp";
+
+            reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        };
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
         if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());

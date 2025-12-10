@@ -37,7 +37,7 @@ void BrandingManager::registerBrand(const std::string& modId, const std::string&
             type
         ));
 
-        log::debug("Registered branding for {}", modId);
+        log::debug("Registered branding {} for {}", image, modId);
     };
 };
 
@@ -54,11 +54,11 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<> BrandingManagerOpt::registerBrand(
+Result<> BrandingManagerV2::registerBrand(
     std::string const& modId,
     std::string const& image,
-    BrandImageType type
+    BrandImageTypeV2 type
 ) {
-    BrandingManager::get()->registerBrand(modId, image, type);
+    BrandingManager::get()->registerBrand(modId, image, static_cast<BrandImageType>(static_cast<int>(type)));
     return Ok();
 };

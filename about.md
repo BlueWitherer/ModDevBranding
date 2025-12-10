@@ -27,7 +27,7 @@ using namespace branding;
 
 $execute {
     (void)[&]()->Result<> {
-        GEODE_UNWRAP(BrandingManagerOpt::registerBrand(
+        GEODE_UNWRAP(BrandingManagerV2::registerBrand(
             "me.mymod",
             "my-sprite.png"_spr,
             BrandImageType::SpriteFrame

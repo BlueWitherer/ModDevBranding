@@ -15,7 +15,7 @@
 using namespace geode::prelude;
 
 namespace branding {
-    enum class BrandImageType {
+    enum class BrandImageType : int {
         URL = 0,
         Sprite = 1,
         SpriteFrame = 2
