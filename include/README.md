@@ -24,19 +24,19 @@ Here are some important classes we highly suggest you keep in mind while working
 
 #### class `branding::BrandingManagerV2`
 The optional manager class for `BrandingManager`.
-- `static Result<>` **`registerBrand(std::string const& modId, std::string const& image, BrandImageTypeV2 type = BrandImageTypeV2::Sprite)`**: Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
+- `static Result<>` **`registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite)`**: Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
   - `std::string const&` **`modId`**: ID of the mod to apply branding on
   - `std::string const&` **`image`**: Sprite name, sheet frame name, or URL of the image to use as branding on this mod
-  - `BrandImageTypeV2` **`type`**: Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
+  - `BrandImageType` **`type`**: Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
 
-#### enum class `branding::BrandImageTypeV2`
+#### enum class `branding::BrandImageType`
 An enum class that defines the type of image source for your branding.
 
 #### Summary
 | Type         | Name                | Description                        |
 | ------------ | ------------------- | ---------------------------------- |
 | `class`      | `BrandingManagerV2` | Manager for mod developer branding |
-| `enum class` | `BrandImageTypeV2`  | Defines where an image comes from  |
+| `enum class` | `BrandImageType`    | Defines where an image comes from  |
 
 ### Branding
 You can register a brand for your mod through this optional API.
@@ -58,7 +58,7 @@ $execute {
 };
 ```
 
-You can include the optional field **`type`** as well! You can set it to `BrandImageTypeV2::URL` if you want to include a remote image URL as your branding. With `BrandImageTypeV2::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageTypeV2::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
+You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include a remote image URL as your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
 
 ```cpp
 $execute {
@@ -66,7 +66,7 @@ $execute {
         GEODE_UNWRAP(BrandingManagerV2::registerBrand(
             "me.mymod",
             "my-sprite.png"_spr,
-            BrandImageTypeV2::SpriteFrame
+            BrandImageType::SpriteFrame
         ));
         return Ok();
     }();
