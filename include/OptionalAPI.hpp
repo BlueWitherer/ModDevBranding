@@ -9,7 +9,7 @@
 #ifdef MY_MOD_ID
 #undef MY_MOD_ID
 #endif
-#define MY_MOD_ID GEODE_MOD_ID
+#define MY_MOD_ID "cheeseworks.moddevbranding"
 
 using namespace geode::prelude;
 
