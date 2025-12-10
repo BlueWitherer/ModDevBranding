@@ -20,7 +20,7 @@ If you're a <cg>mod developer</c>, head on over to **[moddev.cheeseworks.gay](ht
 > ![ℹ️](frame:GJ_infoIcon_001.png?scale=0.5) <cj>*If you're not a **verified developer** on Geode, your branding will be put under a brief review process by our staff.*</c>
 
 ### Previewing
-You can use the **`Test Brand Image`** setting to preview your branding in-game to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
+You can use the <cg>**`Test Brand Image`** setting</c> to <cy>preview your branding in-game</c> to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
 
 > ![✳️](frame:collaborationIcon_001.png) <cg>*Recommended image resolution and ratio is `903px`x`777px` to properly fit branding UI container. Looks best when expanding from the bottom-right corner outwards!*</c>
 
