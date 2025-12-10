@@ -8,7 +8,7 @@
 ---
 
 ## About
-This mod adds a branding image from the main developer of a mod or the mod itself onto its information popup.
+This mod adds a snazzy branding image from the main developer of a mod or the mod itself onto its information popup.
 
 ---
 
