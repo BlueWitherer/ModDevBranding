@@ -117,7 +117,6 @@ void BrandingNode::loadBrand() {
 
         lazySprite->setID("brand"_spr);
         lazySprite->setOpacity(100);
-        lazySprite->setAutoResize(true);
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
@@ -128,6 +127,14 @@ void BrandingNode::loadBrand() {
                 lazySprite->setOpacity(100);
                 lazySprite->setAnchorPoint({ 1, 0 });
                 lazySprite->setPosition({ getScaledContentWidth(), 0.f });
+
+                float scaleX = m_impl->m_container->getScaledContentWidth() / lazySprite->getScaledContentWidth();
+                float scaleY = m_impl->m_container->getScaledContentHeight() / lazySprite->getScaledContentHeight();
+
+                float scale = std::min(scaleX, scaleY);
+                if (scale >= 1.0f) scale = 1.0f;
+
+                lazySprite->setScale(scale);
             } else {
                 log::error("failed to load remote branding sprite");
                 lazySprite->removeMeAndCleanup();

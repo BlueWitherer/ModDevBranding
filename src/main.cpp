@@ -36,6 +36,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             m_fields->m_height = md->getScaledContentHeight();
 
             m_fields->m_branding = BrandingNode::create(md, username, modId);
+            m_fields->m_branding->setPositionX(m_fields->m_branding->getPositionX() + 7.794f);
             m_fields->m_branding->setZOrder(-9);
 
             md->addChild(m_fields->m_branding);
