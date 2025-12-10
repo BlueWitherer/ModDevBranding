@@ -54,10 +54,6 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<BrandingManager*> BrandingManagerOpt::get() {
-    return Ok(BrandingManager::get());
-};
-
 Result<> BrandingManagerOpt::registerBrand(
     std::string const& modId,
     std::string const& image,
@@ -67,6 +63,10 @@ Result<> BrandingManagerOpt::registerBrand(
     return Ok();
 };
 
-Result<Branding> BrandingManagerOpt::getBrand(std::string_view modId) const {
+Result<Branding> BrandingManagerOpt::getBrand(std::string_view modId) {
     return Ok(BrandingManager::get()->getBrand(modId));
+};
+
+Result<BrandingManager*> BrandingManagerOpt::get() {
+    return Ok(BrandingManager::get());
 };
