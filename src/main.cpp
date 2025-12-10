@@ -25,9 +25,9 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
     void modify() {
         auto username = getGitUsername();
-        auto modId = getModID();
+        auto mod = getModID();
 
-        log::debug("creating brand node for {} by {}", modId, username);
+        log::debug("creating brand node for {} by {}", mod, username);
 
         if (auto md = static_cast<MDTextArea*>(getChildByIDRecursive("textarea"))) {
             log::info("found mod desc container");
@@ -35,7 +35,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             m_fields->m_textArea = md;
             m_fields->m_height = md->getScaledContentHeight();
 
-            m_fields->m_branding = BrandingNode::create(md, username, modId);
+            m_fields->m_branding = BrandingNode::create(md, username, mod);
             m_fields->m_branding->setPositionX(m_fields->m_branding->getPositionX() + 7.794f);
             m_fields->m_branding->setZOrder(-9);
 
