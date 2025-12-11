@@ -47,7 +47,7 @@ To register your very own fabulous branding for your mod, you can call **`Brandi
 *Required fields are, in order: `modId` and `image`. Optional field is `type`.*
 
 ```cpp
-$execute {
+$execute{
     BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite-image.png"_spr
@@ -58,7 +58,7 @@ $execute {
 You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include an external image URL as the image source for your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
 
 ```cpp
-$execute {
+$execute{
     BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite.png"_spr,

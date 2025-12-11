@@ -34,7 +34,7 @@ Want to add branding for your mod specifically? You can register your very own b
 ```cpp
 using namespace branding;
 
-$execute {
+$execute{
     BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite.png"_spr,
