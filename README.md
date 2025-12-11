@@ -53,6 +53,14 @@ $execute{
 
 ---
 
+![preview](previews/preview-1.png)
+![preview](previews/preview-2.png)
+![preview](previews/preview-3.png)
+![preview](previews/preview-4.png)
+![preview](previews/preview-5.png)
+
+---
+
 ### Changelog
 ###### What's new?!
 **[📜 View the latest updates and patches](./changelog.md)**
