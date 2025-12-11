@@ -29,14 +29,11 @@ Want to add branding for your mod specifically? You can register your very own b
 using namespace branding;
 
 $execute {
-    (void)[&]()->Result<> {
-        GEODE_UNWRAP(BrandingManagerV2::registerBrand(
-            "me.mymod",
-            "my-sprite.png"_spr,
-            BrandImageType::SpriteFrame
-        ));
-        return Ok();
-    }();
+    BrandingManagerV2::registerBrand(
+        "me.mymod",
+        "my-sprite.png"_spr,
+        BrandImageType::SpriteFrame
+    );
 };
 ```
 

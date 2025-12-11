@@ -12,7 +12,7 @@ Let's start off by adding this mod as a dependency in your `mod.json`!
 }
 ```
 
-You can directly access the Mod Developer Branding API by including the [`OptionalAPI.hpp`](OptionalAPI.hpp) file in your code. Make sure to include the **`branding`** namespace to directly access all needed classes and methods.
+You can directly access the Mod Developer Branding optional API by including the [`OptionalAPI.hpp`](OptionalAPI.hpp) file in your code. Make sure to include the **`branding`** namespace to directly access all needed classes and methods.
 ```cpp
 #include <cheeseworks.moddevbranding/include/OptionalAPI.hpp>
 
@@ -42,40 +42,34 @@ An enum class that defines the type of image source for your branding.
 You can register a brand for your mod through this optional API.
 
 #### Registering
-To register your very own fabulous branding for your mod, you can wrap a **`BrandingManagerV2::registerBrand`** with `GEODE_UNWRAP` inside an `$execute` block.
+To register your very own fabulous branding for your mod, you can call **`BrandingManagerV2::registerBrand`** inside an `$execute` block.
 
 *Required fields are, in order: `modId` and `image`. Optional field is `type`.*
 
 ```cpp
 $execute {
-    (void)[&]()->Result<> {
-        GEODE_UNWRAP(BrandingManagerV2::registerBrand(
-            "me.mymod",
-            "my-sprite-image.png"_spr
-        ));
-        return Ok();
-    }();
+    BrandingManagerV2::registerBrand(
+        "me.mymod",
+        "my-sprite-image.png"_spr
+    );
 };
 ```
 
-You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include a remote image URL as your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
+You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include an external image URL as the image source for your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
 
 ```cpp
 $execute {
-    (void)[&]()->Result<> {
-        GEODE_UNWRAP(BrandingManagerV2::registerBrand(
-            "me.mymod",
-            "my-sprite.png"_spr,
-            BrandImageType::SpriteFrame
-        ));
-        return Ok();
-    }();
+    BrandingManagerV2::registerBrand(
+        "me.mymod",
+        "my-sprite.png"_spr,
+        BrandImageType::SpriteFrame
+    );
 };
 ```
 
-Congrats! Your branding image will now load on your mod info popup.
+Congrats! Your branding image will now load on your mod info popup if the user chooses to load the mod.
 
 > [!NOTE]
-> *With this method, your branding will only load once your mod is installed and loaded. To cover all of your mods with a base branding image before users decide to download your mods, head to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to manage your universal mod developer branding.*
+> *With this method, your branding will **only** load once your mod is installed and loaded. To cover all of your mods with a base branding image before users decide to download your mods, head to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to manage your universal mod developer branding.*
 
 *Happy modding!*
