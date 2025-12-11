@@ -24,10 +24,6 @@
         "alphalaneous.alphas_geode_utils": {
             "importance": "required",
             "version": ">=1.1.0"
-        },
-        "prevter.imageplus": {
-            "importance": "recommended",
-            "version": ">=1.0.0"
         }
     },
     "links": {
@@ -48,7 +44,7 @@
         "preview-image": {
             "type": "file",
             "name": "Test Brand Image",
-            "description": "Upload an image to test it out as branding on this mod's popup.",
+            "description": "Provide a local image to test it out as branding on this mod's popup.",
             "default": "",
             "control": {
                 "dialog": "open",
@@ -60,7 +56,8 @@
                             "*.jpeg",
                             "*.webp",
                             "*.gif"
-                        ]
+                        ],
+                        "description": "Image Files"
                     }
                 ]
             }

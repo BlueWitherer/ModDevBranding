@@ -35,11 +35,13 @@ Want to add branding for your mod specifically? You can register your very own b
 using namespace branding;
 
 $execute{
-    BrandingManagerV2::registerBrand(
+    auto res = BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite.png"_spr,
         BrandImageType::SpriteFrame
     );
+
+    if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
 };
 ```
 

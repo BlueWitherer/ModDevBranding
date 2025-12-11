@@ -23,7 +23,7 @@ using namespace branding;
 Here are some important classes we highly suggest you keep in mind while working with the API.
 
 #### class `branding::BrandingManagerV2`
-The optional manager class for `BrandingManager`.
+The optional variant of manager class `BrandingManager`.
 - `static Result<>` **`registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite)`**: Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
   - `std::string const&` **`modId`**: ID of the mod to apply branding on
   - `std::string const&` **`image`**: Sprite name, sheet frame name, or URL of the image to use as branding on this mod
@@ -48,10 +48,12 @@ To register your very own fabulous branding for your mod, you can call **`Brandi
 
 ```cpp
 $execute{
-    BrandingManagerV2::registerBrand(
+    auto res = BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite-image.png"_spr
     );
+
+    if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
 };
 ```
 
@@ -59,11 +61,13 @@ You can include the optional field **`type`** as well! You can set it to `BrandI
 
 ```cpp
 $execute{
-    BrandingManagerV2::registerBrand(
+    auto res = BrandingManagerV2::registerBrand(
         "me.mymod",
-        "my-sprite.png"_spr,
+        "my-sprite-frame.png"_spr,
         BrandImageType::SpriteFrame
     );
+
+    if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
 };
 ```
 
