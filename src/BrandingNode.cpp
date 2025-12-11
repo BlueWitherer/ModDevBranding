@@ -65,7 +65,7 @@ void BrandingNode::loadBrand() {
         switch (m_impl->m_brand.type) {
         case BrandImageType::URL: {
             log::debug("{} requested a url", m_impl->m_brand.mod);
-            lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize());
+            lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize(), false);
             break;
         };
 
@@ -111,7 +111,7 @@ void BrandingNode::loadBrand() {
         };
     } else {
         log::debug("using remote or test brand for mod {}", m_impl->m_brand.mod);
-        lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize());
+        lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize(), false);
     };
 
     if (lazySprite) {
