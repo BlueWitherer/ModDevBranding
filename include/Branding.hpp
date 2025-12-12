@@ -89,9 +89,10 @@ namespace branding {
          * @attention The `registerBrand` function already uses this function internally
          *
          * @param modId ID of the mod
+         * @param checkLocal Whether to check local save data
          *
          * @returns Whether this mod is already registered
          */
-        bool doesBrandExist(std::string_view modId) const;
+        bool doesBrandExist(std::string_view modId, bool checkLocal = false) const;
     };
 };

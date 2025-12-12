@@ -17,9 +17,9 @@ matjson::Value Branding::toJson() const {
 
 Branding Branding::fromJson(const matjson::Value& v) {
     return Branding(
-        v["image"].asString().unwrapOrDefault(),
-        v["mod"].asString().unwrapOrDefault(),
-        static_cast<BrandImageType>(v["type"].asInt().unwrapOrDefault())
+        v["image"].asString().unwrapOr(""),
+        v["mod"].asString().unwrapOr(""),
+        static_cast<BrandImageType>(v["type"].asInt().unwrapOr(0))
     );
 };
 
@@ -38,34 +38,34 @@ std::vector<Branding> BrandingManager::getBrands() const {
     return m_impl->m_brands;
 };
 
-bool BrandingManager::doesBrandExist(std::string_view modId) const {
+bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const {
     for (const auto& brand : getBrands()) {
         if (brand.mod == modId) return true;
     };
 
-    return false;
+    return checkLocal && Mod::get()->hasSavedValue(modId);
 };
 
 void BrandingManager::registerBrand(const std::string& modId, const std::string& image, BrandImageType type) {
+    auto b = Branding(
+        image,
+        modId,
+        type
+    );
+
+    Mod::get()->setSavedValue<matjson::Value>(modId, b.toJson());
+
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
     } else {
-        auto brd = Branding(
-            image,
-            modId,
-            type
-        );
-
-        m_impl->m_brands.push_back(brd);
-        Mod::get()->setSavedValue<matjson::Value>(modId, brd.toJson());
-
-        log::debug("Registered branding {} for {}", image, modId);
+        m_impl->m_brands.push_back(b);
+        log::debug("Registered branding {} of type {} for {}", image, static_cast<int>(type), modId);
     };
 };
 
 Branding BrandingManager::getBrand(std::string_view modId) const {
-    for (const auto& brd : getBrands()) {
-        if (brd.mod == modId) return brd;
+    for (const auto& b : getBrands()) {
+        if (b.mod == modId) return b;
     };
 
     if (Loader::get()->isModInstalled(std::string(modId))) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId));
