@@ -31,6 +31,24 @@ namespace branding {
             std::string m,
             BrandImageType t = BrandImageType::Sprite
         ) : image(i), mod(m), type(t) {};
+
+        /**
+         * Returns a matjson object constructed from a constructed Branding struct
+         *
+         * @param b Branding object
+         *
+         * @returns Constructed matjson object
+         */
+        matjson::Value toJson() const;
+
+        /**
+         * Returns a Branding struct constructed from a matjson object
+         *
+         * @param v matjson object
+         *
+         * @returns Constructed Branding object
+         */
+        static Branding fromJson(const matjson::Value& v);
     };
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager : public CCObject {
