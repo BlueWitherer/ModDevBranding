@@ -4,6 +4,9 @@
 
 using namespace branding;
 
+Branding::Branding(std::string i, std::string m, BrandImageType t)
+    : image(std::move(i)), mod(std::move(m)), type(t) {};
+
 matjson::Value Branding::toJson() const {
     return matjson::makeObject({
         { "image", image },
@@ -47,22 +50,22 @@ void BrandingManager::registerBrand(const std::string& modId, const std::string&
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
     } else {
-        auto b = Branding(
+        auto brd = Branding(
             image,
             modId,
             type
         );
 
-        m_impl->m_brands.push_back(b);
-        Mod::get()->setSavedValue(modId, b.toJson());
+        m_impl->m_brands.push_back(brd);
+        Mod::get()->setSavedValue<matjson::Value>(modId, brd.toJson());
 
         log::debug("Registered branding {} for {}", image, modId);
     };
 };
 
 Branding BrandingManager::getBrand(std::string_view modId) const {
-    for (const auto& b : getBrands()) {
-        if (b.mod == modId) return b;
+    for (const auto& brd : getBrands()) {
+        if (brd.mod == modId) return brd;
     };
 
     if (Loader::get()->isModInstalled(std::string(modId))) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId));

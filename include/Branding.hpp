@@ -26,11 +26,7 @@ namespace branding {
         std::string mod;
         BrandImageType type = BrandImageType::Sprite;
 
-        Branding(
-            std::string i,
-            std::string m,
-            BrandImageType t = BrandImageType::Sprite
-        ) : image(i), mod(m), type(t) {};
+        Branding(std::string i, std::string m, BrandImageType t = BrandImageType::Sprite);
 
         /**
          * Returns a matjson object constructed from a constructed Branding struct

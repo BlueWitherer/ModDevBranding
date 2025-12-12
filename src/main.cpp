@@ -8,6 +8,11 @@ using namespace geode::prelude;
 
 namespace str = utils::string;
 
+$on_mod(Loaded) {
+    auto saveData = Mod::get()->getSaveContainer();
+    log::info("save data size is {}", saveData.size());
+};
+
 class $nodeModify(BrandingModPopup, ModPopup) {
     struct Fields {
         Ref<MDTextArea> m_textArea = nullptr;

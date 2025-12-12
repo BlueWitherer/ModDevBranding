@@ -87,6 +87,8 @@ void BrandingNode::loadBrand() {
         };
         };
 
+        log::debug("processing local branding image {}", m_impl->m_brand.image);
+
         if (sprite) {
             log::debug("branding sprite found");
 
@@ -112,13 +114,13 @@ void BrandingNode::loadBrand() {
     } else {
         log::debug("using remote or test brand for mod {}", m_impl->m_brand.mod);
         lazySprite = LazySprite::create(m_impl->m_container->getScaledContentSize(), false);
+        log::debug("processing remote branding image {}", m_impl->m_brand.image);
     };
 
     if (lazySprite) {
         log::debug("branding lazysprite found");
 
         lazySprite->setID("brand"_spr);
-        lazySprite->setOpacity(100);
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
