@@ -24,7 +24,7 @@ If you're a mod developer, go to **[moddev.cheeseworks.gay](https://moddev.chees
 You can use the **`Test Brand Image`** setting to preview your branding in-game to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
 
 > [!TIP]
-> *Recommended image resolution and ratio is `903px`x`777px` to properly fit branding UI container. Looks best when expanding from the bottom-right corner outwards!*
+> *Recommended image resolution and ratio is **`903`x`777`** in `px` to best fit in the branding UI container. Looks best when expanding from the bottom-right corner outwards!*
 
 ---
 
@@ -36,12 +36,12 @@ using namespace branding;
 
 $execute{
     auto res = BrandingManagerV2::registerBrand(
-        "me.mymod",
-        "my-sprite.png"_spr,
+        "awesomeguy.myepicmod",
+        "my-beautiful-sprite.png"_spr,
         BrandImageType::SpriteFrame
     );
 
-    if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
+    if (res.isErr()) log::error("couldn't load my mod branding: {}", res.unwrapErr());
 };
 ```
 

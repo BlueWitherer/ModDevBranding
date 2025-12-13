@@ -17,6 +17,7 @@ public:
     Ref<MDTextArea> m_container = nullptr;
 
     float m_timeout = static_cast<float>(Mod::get()->getSettingValue<double>("timeout"));
+    int64_t m_opacity = Mod::get()->getSettingValue<int64_t>("opacity");
     bool m_useWebP = Loader::get()->isModLoaded("prevter.imageplus");
 };
 

@@ -78,6 +78,23 @@
                 "big-arrows": true,
                 "big-arrow-step": 15.0
             }
+        },
+        "opacity": {
+            "type": "int",
+            "name": "Image Opacity",
+            "description": "Adjust the opacity of the branding image that appears on the mod information popup.",
+            "default": 100,
+            "min": 1,
+            "max": 255,
+            "control": {
+                "input": true,
+                "slider": true,
+                "slider-step": 1,
+                "arrows": true,
+                "arrow-step": 25,
+                "big-arrows": true,
+                "big-arrow-step": 100
+            }
         }
     },
     "early-load": false

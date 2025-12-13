@@ -68,7 +68,7 @@ Branding BrandingManager::getBrand(std::string_view modId) const {
         if (b.mod == modId) return b;
     };
 
-    if (Loader::get()->isModInstalled(std::string(modId))) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId));
+    if (modId != GEODE_MOD_ID && Loader::get()->isModInstalled(std::string(modId))) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId));
 
     return Branding("", std::string(modId));
 };

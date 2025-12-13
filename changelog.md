@@ -1,5 +1,6 @@
 # v1.0.2
-- Branding registered by other mods via API will now be cached
+- Added number setting `Image Opacity`
+- Branding registered by other mods via API will now be locally saved
 
 # v1.0.1
 - Hid loading circle during image load

@@ -33,13 +33,24 @@ The optional variant of manager class `BrandingManager`.
 An enum class that defines the type of image source for your branding.
 
 #### Summary
-| Type         | Name                | Description                        |
-| ------------ | ------------------- | ---------------------------------- |
-| `class`      | `BrandingManagerV2` | Manager for mod developer branding |
-| `enum class` | `BrandImageType`    | Defines where an image comes from  |
+| Type         | Name                | Description                                |
+| ------------ | ------------------- | ------------------------------------------ |
+| `class`      | `BrandingManagerV2` | Manager for developer branding             |
+| `enum class` | `BrandImageType`    | Determines the expected source of an image |
 
 ### Branding
 You can register a brand for your mod through this optional API.
+
+> [!IMPORTANT]
+> Don't forget to include your brand sprite in your mod's resources and configuration!
+> 
+> ```jsonc
+> "resources": {
+>     "sprites": [
+>         "resources/*.png"
+>     ]
+> }
+> ```
 
 #### Registering
 To register your very own fabulous branding for your mod, you can call **`BrandingManagerV2::registerBrand`** inside an `$execute` block.
@@ -51,13 +62,13 @@ $execute{
     auto res = BrandingManagerV2::registerBrand(
         "me.mymod",
         "my-sprite-image.png"_spr
-    );
+    ); // Register a sprite image as your branding
 
     if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
 };
 ```
 
-You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include an external image URL as the image source for your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is included in a spritesheet.
+You can include the optional field **`type`** as well! You can set it to `BrandImageType::URL` if you want to include an external image URL as the image source for your branding. With `BrandImageType::Sprite`, you can provide a separate sprite image as your mod branding, and `BrandImageType::SpriteFrame` if you're providing a sprite that is part of a spritesheet.
 
 ```cpp
 $execute{
@@ -71,9 +82,9 @@ $execute{
 };
 ```
 
-Congrats! Your branding image will now load on your mod info popup if the user chooses to load the mod.
-
 > [!NOTE]
-> *With this method, your branding will **only** load once your mod is installed and loaded. To cover all of your mods with a base branding image before users decide to download your mods, head to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to manage your universal mod developer branding.*
+> *With this method, your branding will **only** load and save once your mod is installed and loaded. To cover all of your mods with a base branding image before users decide to download your mods, head to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to upload your universal mod developer branding.*
+
+Congrats! Your branding image will now load on your mod info popup once the user chooses to use your mod.
 
 *Happy modding!*

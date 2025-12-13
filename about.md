@@ -18,7 +18,7 @@ If you're a <cg>mod developer</c>, go to **[moddev.cheeseworks.gay](https://modd
 ### Previewing
 You can use the <cg>**`Test Brand Image`** setting</c> to <cy>preview your branding in-game</c> to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
 
-> ![✳️](frame:collaborationIcon_001.png) <cg>*Recommended image resolution and ratio is `903px`x`777px` to properly fit branding UI container. Looks best when expanding from the bottom-right corner outwards!*</c>
+> ![✳️](frame:collaborationIcon_001.png) <cg>*Recommended image resolution and ratio is **`903`x`777`** in `px` to best fit in the branding UI container. Looks best when expanding from the bottom-right corner outwards!*</c>
 
 ---
 
@@ -30,12 +30,12 @@ using namespace branding;
 
 $execute{
     auto res = BrandingManagerV2::registerBrand(
-        "me.mymod",
-        "my-sprite.png"_spr,
+        "awesomeguy.myepicmod",
+        "my-beautiful-sprite.png"_spr,
         BrandImageType::SpriteFrame
     );
 
-    if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
+    if (res.isErr()) log::error("couldn't load my mod branding: {}", res.unwrapErr());
 };
 ```
 
