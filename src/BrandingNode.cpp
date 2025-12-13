@@ -54,7 +54,7 @@ void BrandingNode::loadBrand() {
 
     LazySprite* lazySprite = nullptr;
 
-    auto localBrand = useLocalBrand() && m_impl->m_brand.mod != GEODE_MOD_ID;
+    auto localBrand = useLocalBrand();
     if (localBrand) {
         log::debug("using local brand for mod {}", m_impl->m_brand.mod);
 
@@ -124,8 +124,6 @@ void BrandingNode::loadBrand() {
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
-        addChild(lazySprite);
-
         lazySprite->setLoadCallback([=](Result<> res) {
             if (res.isOk()) {
                 log::info("loaded remote or test branding sprite");
@@ -134,20 +132,22 @@ void BrandingNode::loadBrand() {
                 lazySprite->setAnchorPoint({ 1, 0 });
                 lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
-                float scaleX = m_impl->m_container->getScaledContentWidth() / lazySprite->getScaledContentWidth();
-                float scaleY = m_impl->m_container->getScaledContentHeight() / lazySprite->getScaledContentHeight();
+                auto scaleX = m_impl->m_container->getScaledContentWidth() / lazySprite->getScaledContentWidth();
+                auto scaleY = m_impl->m_container->getScaledContentHeight() / lazySprite->getScaledContentHeight();
 
-                float scale = std::min(scaleX, scaleY);
+                auto scale = std::min(scaleX, scaleY);
                 if (scale >= 1.0f) scale = 1.0f;
 
                 lazySprite->setScale(scale);
             } else if (res.isErr()) {
                 log::error("failed to load remote or test branding sprite: {}", res.unwrapErr());
-                lazySprite->removeMeAndCleanup();
             } else {
                 log::error("unknown error when loading or test remote branding sprite");
+                lazySprite->removeMeAndCleanup();
             };
                                     });
+
+        addChild(lazySprite);
 
         if (m_impl->m_brand.mod == GEODE_MOD_ID) {
             log::debug("attempting to load local test brand image");
@@ -174,15 +174,13 @@ void BrandingNode::loadBrand() {
         };
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
-        if (m_impl->m_brand.mod.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str(), CCImage::kFmtUnKnown, m_impl->m_brand.mod == GEODE_MOD_ID);
+        if (reqUrl.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
 
         // cancel load after timeout
         log::debug("scheduling image load cancel for {} after {} seconds", reqUrl, m_impl->m_timeout);
         lazySprite->runAction(CCSequence::createWithTwoActions(
             CCDelayTime::create(m_impl->m_timeout),
-            CCCallFuncN::create(
-                this, callfuncN_selector(BrandingNode::cancelRemoteLoad)
-            )
+            CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))
         ));
     } else {
         if (localBrand) log::error("no branding lazysprite created");
