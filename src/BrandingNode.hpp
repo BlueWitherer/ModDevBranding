@@ -13,11 +13,13 @@ protected:
     BrandingNode();
     virtual ~BrandingNode();
 
-    Branding brand(std::string_view modId) const;
-    bool useLocalBrand() const;
-
     void retryRemoteLoad(LazySprite* sender);
     void cancelRemoteLoad(CCNode* sender);
+
+    float getImageScale(CCSprite* sprite) const;
+
+    Branding brand(std::string_view modId) const;
+    bool useLocalBrand() const;
 
     bool init(MDTextArea* container, const std::string& dev, const std::string& modId);
 

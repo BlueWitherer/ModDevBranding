@@ -36,9 +36,6 @@ bool BrandingNode::init(MDTextArea* container, const std::string& dev, const std
 
     if (!CCNode::init()) return false;
 
-    // temp fix idk
-    m_impl->m_brand.mod = modId;
-
     setID("branding"_spr);
     setAnchorPoint({ 1, 0 });
     setContentSize(container->getScaledContentSize());
@@ -96,17 +93,10 @@ void BrandingNode::loadBrand() {
             log::debug("branding sprite found");
 
             sprite->setID("brand"_spr);
-            sprite->setOpacity(100);
+            sprite->setOpacity(m_impl->m_opacity);
             sprite->setAnchorPoint({ 1, 0 });
             sprite->setPosition({ getScaledContentWidth(), 0.f });
-
-            float scaleX = m_impl->m_container->getScaledContentWidth() / sprite->getScaledContentWidth();
-            float scaleY = m_impl->m_container->getScaledContentHeight() / sprite->getScaledContentHeight();
-
-            float scale = std::min(scaleX, scaleY);
-            if (scale >= 1.0f) scale = 1.0f;
-
-            sprite->setScale(scale);
+            sprite->setScale(getImageScale(sprite));
 
             addChild(sprite);
 
@@ -131,17 +121,10 @@ void BrandingNode::loadBrand() {
             if (res.isOk()) {
                 log::info("loaded remote or test branding sprite");
 
-                lazySprite->setOpacity(100);
+                lazySprite->setOpacity(m_impl->m_opacity);
                 lazySprite->setAnchorPoint({ 1, 0 });
                 lazySprite->setPosition({ getScaledContentWidth(), 0.f });
-
-                auto scaleX = m_impl->m_container->getScaledContentWidth() / lazySprite->getScaledContentWidth();
-                auto scaleY = m_impl->m_container->getScaledContentHeight() / lazySprite->getScaledContentHeight();
-
-                auto scale = std::min(scaleX, scaleY);
-                if (scale >= 1.0f) scale = 1.0f;
-
-                lazySprite->setScale(scale);
+                lazySprite->setScale(getImageScale(lazySprite));
             } else if (res.isErr()) {
                 log::error("failed to load remote or test branding sprite: {}", res.unwrapErr());
                 if (!m_impl->m_retried) retryRemoteLoad(lazySprite);
@@ -192,20 +175,39 @@ void BrandingNode::loadBrand() {
 };
 
 void BrandingNode::retryRemoteLoad(LazySprite* sender) {
-    m_impl->m_retried = true;
+    if (sender) {
+        m_impl->m_retried = true;
 
-    auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
-    auto query = "&fmt=webp";
+        auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
+        auto query = "&fmt=webp";
 
-    auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
 
-    log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
-    sender->loadFromUrl(reqUrl.c_str());
+        log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
+        sender->loadFromUrl(reqUrl.c_str());
+    } else {
+        log::error("lazysprite is missing");
+    };
 };
 
 void BrandingNode::cancelRemoteLoad(CCNode* sender) {
     log::warn("attempting to cancel remote or test brand image load");
     if (auto lazySprite = static_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
+};
+
+float BrandingNode::getImageScale(CCSprite* sprite) const {
+    if (m_impl->m_container && sprite) {
+        auto scaleX = m_impl->m_container->getScaledContentWidth() / sprite->getScaledContentWidth();
+        auto scaleY = m_impl->m_container->getScaledContentHeight() / sprite->getScaledContentHeight();
+
+        auto scale = std::min<float>(scaleX, scaleY);
+        if (scale >= 1.f) scale = 1.f;
+
+        return scale;
+    } else {
+        log::error("branding container or sprite not found");
+        return 1.f;
+    };
 };
 
 Branding BrandingNode::brand(std::string_view modId) const {

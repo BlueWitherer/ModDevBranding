@@ -83,7 +83,7 @@
             "type": "int",
             "name": "Image Opacity",
             "description": "Adjust the opacity of the branding image that appears on the mod information popup.",
-            "default": 100,
+            "default": 125,
             "min": 1,
             "max": 255,
             "control": {
