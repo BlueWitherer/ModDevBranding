@@ -4,8 +4,8 @@
 
 using namespace branding;
 
-Branding::Branding(std::string i, std::string m, BrandImageType t)
-    : image(std::move(i)), mod(std::move(m)), type(t) {};
+Branding::Branding(const std::string& i, const std::string& m, BrandImageType t)
+    : image(i), mod(m), type(t) {};
 
 matjson::Value Branding::toJson() const {
     return matjson::makeObject({

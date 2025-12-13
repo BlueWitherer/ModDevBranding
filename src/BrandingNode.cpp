@@ -29,14 +29,14 @@ BrandingNode::BrandingNode() {
 
 BrandingNode::~BrandingNode() {};
 
-bool BrandingNode::init(MDTextArea* container, std::string_view dev, std::string_view modId) {
+bool BrandingNode::init(MDTextArea* container, const std::string& dev, const std::string& modId) {
     m_impl->m_brand = brand(modId);
     m_impl->m_developer = dev;
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;
 
-    // idk
+    // temp fix idk
     m_impl->m_brand.mod = modId;
 
     setID("branding"_spr);
@@ -218,7 +218,7 @@ bool BrandingNode::useLocalBrand() const {
     return false;
 };
 
-BrandingNode* BrandingNode::create(MDTextArea* container, std::string_view dev, std::string_view modId) {
+BrandingNode* BrandingNode::create(MDTextArea* container, const std::string& dev, const std::string& modId) {
     auto ret = new BrandingNode();
     if (ret->init(container, dev, modId)) {
         ret->autorelease();

@@ -19,10 +19,10 @@ protected:
     void retryRemoteLoad(LazySprite* sender);
     void cancelRemoteLoad(CCNode* sender);
 
-    bool init(MDTextArea* container, std::string_view dev, std::string_view modId);
+    bool init(MDTextArea* container, const std::string& dev, const std::string& modId);
 
 public:
-    static BrandingNode* create(MDTextArea* container, std::string_view dev, std::string_view modId = GEODE_MOD_ID);
+    static BrandingNode* create(MDTextArea* container, const std::string& dev, const std::string& modId = GEODE_MOD_ID);
 
     void loadBrand();
 };
