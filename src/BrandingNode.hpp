@@ -16,6 +16,7 @@ protected:
     Branding brand(std::string_view modId) const;
     bool useLocalBrand() const;
 
+    void retryRemoteLoad(LazySprite* sender);
     void cancelRemoteLoad(CCNode* sender);
 
     bool init(MDTextArea* container, std::string_view dev, std::string_view modId);

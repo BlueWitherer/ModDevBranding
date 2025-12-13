@@ -12,7 +12,9 @@ namespace fs = std::filesystem;
 class BrandingNode::Impl final {
 public:
     Branding m_brand = Branding("", "");
-    std::string developer = "";
+    std::string m_developer = "";
+
+    bool m_retried = false;
 
     Ref<MDTextArea> m_container = nullptr;
 
@@ -29,7 +31,7 @@ BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string_view dev, std::string_view modId) {
     m_impl->m_brand = brand(modId);
-    m_impl->developer = dev;
+    m_impl->m_developer = dev;
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;
@@ -142,6 +144,7 @@ void BrandingNode::loadBrand() {
                 lazySprite->setScale(scale);
             } else if (res.isErr()) {
                 log::error("failed to load remote or test branding sprite: {}", res.unwrapErr());
+                if (!m_impl->m_retried) retryRemoteLoad(lazySprite);
             } else {
                 log::error("unknown error when loading or test remote branding sprite");
                 lazySprite->removeMeAndCleanup();
@@ -168,7 +171,7 @@ void BrandingNode::loadBrand() {
         if (localBrand) {
             reqUrl = m_impl->m_brand.image;
         } else {
-            auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
+            auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->m_developer);
             auto query = "&fmt=webp";
 
             reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
@@ -186,6 +189,18 @@ void BrandingNode::loadBrand() {
     } else {
         if (localBrand) log::error("no branding lazysprite created");
     };
+};
+
+void BrandingNode::retryRemoteLoad(LazySprite* sender) {
+    m_impl->m_retried = true;
+
+    auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
+    auto query = "&fmt=webp";
+
+    auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+
+    log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
+    sender->loadFromUrl(reqUrl.c_str());
 };
 
 void BrandingNode::cancelRemoteLoad(CCNode* sender) {
