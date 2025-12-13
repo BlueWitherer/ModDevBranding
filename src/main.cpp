@@ -39,6 +39,8 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
             md->addChild(m_fields->m_branding);
 
+            log::info("added brand node for {} by {}", mod, username);
+
             schedule(schedule_selector(BrandingModPopup::updateBrandSize));
         } else {
             log::error("couldn't find mod desc container");

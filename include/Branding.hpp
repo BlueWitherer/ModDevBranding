@@ -31,8 +31,6 @@ namespace branding {
         /**
          * Returns a matjson object constructed from a constructed Branding struct
          *
-         * @param b Branding object
-         *
          * @returns Constructed matjson object
          */
         matjson::Value toJson() const;

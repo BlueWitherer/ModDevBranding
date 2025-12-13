@@ -36,8 +36,8 @@ bool BrandingNode::init(MDTextArea* container, std::string_view dev, std::string
 
     if (!CCNode::init()) return false;
 
-    // no mod no brand
-    if (modId.empty()) return false;
+    // idk
+    m_impl->m_brand.mod = modId;
 
     setID("branding"_spr);
     setAnchorPoint({ 1, 0 });
