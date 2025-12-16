@@ -8,11 +8,6 @@ using namespace geode::prelude;
 
 namespace str = utils::string;
 
-$on_mod(Loaded) {
-    auto saveData = Mod::get()->getSaveContainer();
-    log::info("save data size is {}", saveData.size());
-};
-
 class $nodeModify(BrandingModPopup, ModPopup) {
     struct Fields {
         Ref<MDTextArea> m_textArea = nullptr;
@@ -22,8 +17,8 @@ class $nodeModify(BrandingModPopup, ModPopup) {
     };
 
     void modify() {
-        auto username = getGitUsername();
-        auto mod = getModID();
+        auto const username = getGitUsername();
+        auto const mod = getModID();
 
         log::debug("creating brand node for {} by {}", mod, username);
 
@@ -47,13 +42,13 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         };
     };
 
-    std::string getGitUsername() {
+    std::string const getGitUsername() {
         if (auto ghBtn = getChildByIDRecursive("github")) {
-            if (CCString* url = static_cast<CCString*>(ghBtn->getUserObject("url"))) {
-                std::string ghURL = url->getCString();
-                if (ghURL.empty()) return "";
+            if (auto url = static_cast<CCString*>(ghBtn->getUserObject("url"))) {
+                std::string const urlStr = url->getCString();
+                if (urlStr.empty()) return "";
 
-                auto split = str::split(ghURL, "/");
+                auto const split = str::split(urlStr, "/");
                 for (size_t i = 0; i < split.size(); i++) { // gh username
                     if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
                 };
@@ -63,11 +58,11 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         return "";
     };
 
-    std::string getModID() {
+    std::string const getModID() {
         if (auto modPageBtn = getChildByIDRecursive("mod-online-page-button")) {
             if (auto url = static_cast<CCString*>(modPageBtn->getUserObject("url"))) {
                 std::string urlStr = url->getCString();
-                std::string urlGeode = "https://geode-sdk.org/mods/";
+                std::string const urlGeode = "https://geode-sdk.org/mods/";
 
                 if (str::startsWith(urlStr, urlGeode)) return urlStr.erase(0, urlGeode.size());
             };

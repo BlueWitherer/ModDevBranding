@@ -34,12 +34,12 @@ BrandingManager::BrandingManager() {
 
 BrandingManager::~BrandingManager() {};
 
-std::vector<Branding> BrandingManager::getBrands() const {
+std::vector<Branding> const& BrandingManager::getBrands() const {
     return m_impl->m_brands;
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const {
-    for (const auto& brand : getBrands()) {
+    for (auto const& brand : getBrands()) {
         if (brand.mod == modId) return true;
     };
 
@@ -63,8 +63,8 @@ void BrandingManager::registerBrand(const std::string& modId, const std::string&
     };
 };
 
-Branding BrandingManager::getBrand(std::string_view modId) const {
-    for (const auto& b : getBrands()) {
+Branding const& BrandingManager::getBrand(std::string_view modId) const {
+    for (auto const& b : getBrands()) {
         if (b.mod == modId) return b;
     };
 

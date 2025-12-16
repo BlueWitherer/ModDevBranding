@@ -1,3 +1,6 @@
+# v1.0.3
+- Minor improvements
+
 # v1.0.2
 - Added number setting `Image Opacity`
 - Branding registered by other mods via API will now be locally saved

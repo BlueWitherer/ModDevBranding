@@ -34,7 +34,7 @@ Want to add branding for your mod specifically? You can register your very own b
 ```cpp
 using namespace branding;
 
-$execute{
+$on_game(Loaded){
     auto res = BrandingManagerV2::registerBrand(
         "awesomeguy.myepicmod",
         "my-beautiful-sprite.png"_spr,

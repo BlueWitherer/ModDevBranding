@@ -58,7 +58,7 @@ namespace branding {
          *
          * @returns An array of all registered mod branding
          */
-        std::vector<Branding> getBrands() const;
+        std::vector<Branding> const& getBrands() const;
 
     public:
         // Get branding manager singleton
@@ -80,7 +80,7 @@ namespace branding {
          *
          * @returns The object for the branding for this mod
          */
-        Branding getBrand(std::string_view modId) const;
+        Branding const& getBrand(std::string_view modId) const;
 
         /**
          * Check if a mod already has its branding registered
