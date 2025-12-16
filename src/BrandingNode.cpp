@@ -29,7 +29,7 @@ BrandingNode::BrandingNode() {
 
 BrandingNode::~BrandingNode() {};
 
-bool BrandingNode::init(MDTextArea* container, const std::string& dev, const std::string& modId) {
+bool BrandingNode::init(MDTextArea* container, std::string const& dev, std::string const& modId) {
     m_impl->m_brand = brand(modId);
     m_impl->m_developer = dev;
     m_impl->m_container = container;
@@ -62,6 +62,7 @@ void BrandingNode::loadBrand() {
 
         log::debug("scanning brand image node type for {}...", m_impl->m_brand.mod);
         log::debug("{} uses {} as source image for branding", m_impl->m_brand.mod, m_impl->m_brand.image);
+
         switch (m_impl->m_brand.type) {
         case BrandImageType::URL: {
             log::debug("{} requested a url", m_impl->m_brand.mod);
@@ -134,8 +135,6 @@ void BrandingNode::loadBrand() {
             };
                                     });
 
-        addChild(lazySprite);
-
         if (m_impl->m_brand.mod == GEODE_MOD_ID) {
             log::debug("attempting to load local test brand image");
 
@@ -149,13 +148,15 @@ void BrandingNode::loadBrand() {
             };
         };
 
+        addChild(lazySprite);
+
         std::string reqUrl = "";
 
         if (localBrand) {
             reqUrl = m_impl->m_brand.image;
         } else {
-            auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->m_developer);
-            auto query = "&fmt=webp";
+            auto const url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->m_developer);
+            auto const query = "&fmt=webp";
 
             reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
         };
@@ -178,10 +179,10 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
     if (sender) {
         m_impl->m_retried = true;
 
-        auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
-        auto query = "&fmt=webp";
+        auto const url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
+        auto const query = "&fmt=webp";
 
-        auto reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        auto const reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
 
         log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
         sender->loadFromUrl(reqUrl.c_str());
@@ -220,7 +221,7 @@ bool BrandingNode::useLocalBrand() const {
     return false;
 };
 
-BrandingNode* BrandingNode::create(MDTextArea* container, const std::string& dev, const std::string& modId) {
+BrandingNode* BrandingNode::create(MDTextArea* container, std::string const& dev, std::string const& modId) {
     auto ret = new BrandingNode();
     if (ret->init(container, dev, modId)) {
         ret->autorelease();

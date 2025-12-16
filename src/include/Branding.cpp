@@ -4,7 +4,7 @@
 
 using namespace branding;
 
-Branding::Branding(const std::string& i, const std::string& m, BrandImageType t)
+Branding::Branding(std::string const& i, std::string const& m, BrandImageType t)
     : image(i), mod(m), type(t) {};
 
 matjson::Value Branding::toJson() const {
@@ -15,7 +15,7 @@ matjson::Value Branding::toJson() const {
                                });
 };
 
-Branding Branding::fromJson(const matjson::Value& v) {
+Branding Branding::fromJson(matjson::Value const& v) {
     return Branding(
         v["image"].asString().unwrapOr(""),
         v["mod"].asString().unwrapOr(""),
@@ -46,8 +46,8 @@ bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) co
     return checkLocal && Mod::get()->hasSavedValue(modId);
 };
 
-void BrandingManager::registerBrand(const std::string& modId, const std::string& image, BrandImageType type) {
-    auto b = Branding(
+void BrandingManager::registerBrand(std::string const& modId, std::string const& image, BrandImageType type) {
+    auto const b = Branding(
         image,
         modId,
         type
@@ -63,7 +63,7 @@ void BrandingManager::registerBrand(const std::string& modId, const std::string&
     };
 };
 
-Branding const& BrandingManager::getBrand(std::string_view modId) const {
+Branding const BrandingManager::getBrand(std::string_view modId) const {
     for (auto const& b : getBrands()) {
         if (b.mod == modId) return b;
     };
@@ -78,11 +78,7 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<> BrandingManagerV2::registerBrand(
-    std::string const& modId,
-    std::string const& image,
-    BrandImageType type
-) {
+Result<> BrandingManagerV2::registerBrand(std::string const& modId, std::string const& image, BrandImageType type) {
     BrandingManager::get()->registerBrand(modId, image, type);
     return Ok();
 };

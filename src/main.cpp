@@ -45,11 +45,16 @@ class $nodeModify(BrandingModPopup, ModPopup) {
     std::string const getGitUsername() {
         if (auto ghBtn = getChildByIDRecursive("github")) {
             if (auto url = static_cast<CCString*>(ghBtn->getUserObject("url"))) {
-                std::string const urlStr = url->getCString();
+                std::string urlStr = url->getCString();
                 if (urlStr.empty()) return "";
 
+                while (urlStr.back() == '/') urlStr.pop_back();
+
+                if (urlStr.starts_with("https://www.")) urlStr.erase(8, 4);
+                if (urlStr.starts_with("http://www.")) urlStr.erase(7, 4);
+
                 auto const split = str::split(urlStr, "/");
-                for (size_t i = 0; i < split.size(); i++) { // gh username
+                for (size_t i = 0; i < split.size(); i++) {
                     if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
                 };
             };

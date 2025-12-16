@@ -26,7 +26,7 @@ namespace branding {
         std::string mod;
         BrandImageType type = BrandImageType::Sprite;
 
-        Branding(const std::string& i, const std::string& m, BrandImageType t = BrandImageType::Sprite);
+        Branding(std::string const& i, std::string const& m, BrandImageType t = BrandImageType::Sprite);
 
         /**
          * Returns a matjson object constructed from a constructed Branding struct
@@ -42,7 +42,7 @@ namespace branding {
          *
          * @returns Constructed Branding object
          */
-        static Branding fromJson(const matjson::Value& v);
+        static Branding fromJson(matjson::Value const& v);
     };
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager : public CCObject {
@@ -71,7 +71,7 @@ namespace branding {
          * @param image Sprite name, sheet frame name, or URL of the image to use as branding on this mod
          * @param type Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
          */
-        void registerBrand(const std::string& modId, const std::string& image, BrandImageType type = BrandImageType::Sprite);
+        void registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite);
 
         /**
          * Get the branding for a mod
@@ -80,7 +80,7 @@ namespace branding {
          *
          * @returns The object for the branding for this mod
          */
-        Branding const& getBrand(std::string_view modId) const;
+        Branding const getBrand(std::string_view modId) const;
 
         /**
          * Check if a mod already has its branding registered
