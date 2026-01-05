@@ -10,8 +10,8 @@ namespace str = utils::string;
 
 class $nodeModify(BrandingModPopup, ModPopup) {
     struct Fields {
-        Ref<MDTextArea> m_textArea = nullptr;
-        Ref<BrandingNode> m_branding = nullptr;
+        MDTextArea* m_textArea = nullptr;
+        BrandingNode* m_branding = nullptr;
 
         float m_height = 0.f;
     };

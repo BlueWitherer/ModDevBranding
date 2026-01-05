@@ -21,10 +21,10 @@ protected:
     Branding brand(std::string_view modId) const;
     bool useLocalBrand() const;
 
-    bool init(MDTextArea* container, std::string const& dev, std::string const& modId);
+    bool init(MDTextArea* container, std::string_view dev, std::string_view modId);
 
 public:
-    static BrandingNode* create(MDTextArea* container, std::string const& dev, std::string const& modId = GEODE_MOD_ID);
+    static BrandingNode* create(MDTextArea* container, std::string_view dev, std::string_view modId = GEODE_MOD_ID);
 
     void loadBrand();
 };
