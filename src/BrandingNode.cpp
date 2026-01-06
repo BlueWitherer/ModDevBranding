@@ -139,7 +139,7 @@ void BrandingNode::loadBrand() {
             log::debug("attempting to load local test brand image");
 
             // @geode-ignore(unknown-setting)
-            auto path = Mod::get()->getSettingValue<fs::path>("preview-image");
+            auto const path = Mod::get()->getSettingValue<fs::path>("preview-image");
             if (fs::exists(path)) {
                 lazySprite->loadFromFile(path, CCImage::kFmtUnKnown, true);
                 return;
