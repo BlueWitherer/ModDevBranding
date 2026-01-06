@@ -18,7 +18,9 @@ This mod adds a snazzy branding image from the main developer of a mod or the mo
 ---
 
 ### Submit Branding
-If you're a mod developer, go to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to submit your branding! It will automatically appear on *all* of your mods. You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.
+**If you're a mod developer**, go to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to submit your branding! It will automatically appear on *all* of your mods. You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.
+
+If you have no Geode index history, your submission may either be postponed in review or rejected.
 
 ### Previewing
 You can use the **`Test Brand Image`** setting to preview your branding in-game to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
