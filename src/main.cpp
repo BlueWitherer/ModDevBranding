@@ -67,9 +67,9 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         if (auto modPageBtn = getChildByIDRecursive("mod-online-page-button")) {
             if (auto url = static_cast<CCString*>(modPageBtn->getUserObject("url"))) {
                 std::string urlStr = url->getCString();
-                std::string const urlGeode = "https://geode-sdk.org/mods/";
+                constexpr std::string_view urlGeode = "https://geode-sdk.org/mods/";
 
-                if (str::startsWith(urlStr, urlGeode)) return urlStr.erase(0, urlGeode.size());
+                if (str::startsWith(urlStr, urlGeode.data())) return urlStr.erase(0, urlGeode.size());
             };
         };
 

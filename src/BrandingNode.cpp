@@ -150,15 +150,12 @@ void BrandingNode::loadBrand() {
 
         addChild(lazySprite);
 
-        std::string reqUrl = "";
-
+        std::string reqUrl;
         if (localBrand) {
             reqUrl = m_impl->m_brand.image;
         } else {
             auto const url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->m_developer);
-            auto const query = "&fmt=webp";
-
-            reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+            reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? "&fmt=webp" : "");
         };
 
         log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
@@ -180,9 +177,7 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
         m_impl->m_retried = true;
 
         auto const url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->m_developer, m_impl->m_brand.mod);
-        auto const query = "&fmt=webp";
-
-        auto const reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? query : "");
+        auto const reqUrl = fmt::format("{}{}", url, m_impl->m_useWebP ? "&fmt=webp" : "");
 
         log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->m_brand.mod);
         sender->loadFromUrl(reqUrl.c_str());
