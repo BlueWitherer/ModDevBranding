@@ -39,10 +39,7 @@ std::vector<Branding> const& BrandingManager::getBrands() const {
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const {
-    for (auto const& brand : getBrands()) {
-        if (brand.mod == modId) return true;
-    };
-
+    for (auto const& brand : getBrands()) if (brand.mod == modId) return true;
     return checkLocal && Mod::get()->hasSavedValue(modId);
 };
 
@@ -64,10 +61,7 @@ void BrandingManager::registerBrand(std::string const& modId, std::string const&
 };
 
 Branding const BrandingManager::getBrand(std::string_view modId) const {
-    for (auto const& b : getBrands()) {
-        if (b.mod == modId) return b;
-    };
-
+    for (auto const& b : getBrands()) if (b.mod == modId) return b;
     if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJson()));
 
     return Branding("", std::string(modId));

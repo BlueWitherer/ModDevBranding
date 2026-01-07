@@ -54,9 +54,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 if (urlStr.starts_with("http://www.")) urlStr.erase(7, 4);
 
                 auto const split = str::split(urlStr, "/");
-                for (size_t i = 0; i < split.size(); i++) {
-                    if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
-                };
+                for (size_t i = 0; i < split.size(); i++) if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
             };
         };
 
