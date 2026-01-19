@@ -1,3 +1,6 @@
+# v1.0.4
+- Internal optimizations
+
 # v1.0.3
 - Minor improvements
 

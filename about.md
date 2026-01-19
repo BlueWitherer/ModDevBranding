@@ -46,3 +46,7 @@ $on_game(Loaded){
 ### Credits
 - **[ArcticWoof](user:7689052)**: Designed branding dashboard website frontend
 - **[Alphalaneous](user:1139015)**: Original [Mod Developer Branding](https://www.github.com/Alphalaneous/ModDevBranding/) project
+
+---
+
+![🗨️](frame:gj_discordIcon_001.png?scale=0.375) **If you need help, join my [support Discord server](https://www.dsc.gg/cheeseworks) and ask! :)**

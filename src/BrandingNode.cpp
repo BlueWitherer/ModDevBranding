@@ -188,7 +188,7 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
 
 void BrandingNode::cancelRemoteLoad(CCNode* sender) {
     log::warn("attempting to cancel remote or test brand image load");
-    if (auto lazySprite = static_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
+    if (auto lazySprite = typeinfo_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
 };
 
 float BrandingNode::getImageScale(CCSprite* sprite) const {
