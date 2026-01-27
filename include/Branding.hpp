@@ -10,9 +10,9 @@
 #define CW_MODDEVBRANDING_API_DLL __attribute__((visibility("default")))
 #endif
 
-#include <Geode/Geode.hpp>
+#include <cocos2d.h>
 
-using namespace geode::prelude;
+#include <Geode/Result.hpp>
 
 namespace branding {
     enum class BrandImageType : unsigned int {
@@ -26,7 +26,7 @@ namespace branding {
         std::string mod;
         BrandImageType type = BrandImageType::Sprite;
 
-        Branding(std::string const& i, std::string const& m, BrandImageType t = BrandImageType::Sprite);
+        Branding(std::string i, std::string m, BrandImageType t = BrandImageType::Sprite);
 
         /**
          * Returns a matjson object constructed from a constructed Branding struct
@@ -45,11 +45,12 @@ namespace branding {
         static Branding fromJson(matjson::Value const& v);
     };
 
-    class CW_MODDEVBRANDING_API_DLL BrandingManager : public CCObject {
-    protected:
+    class CW_MODDEVBRANDING_API_DLL BrandingManager : public cocos2d::CCObject {
+    private:
         class Impl; // PImpl class
         std::unique_ptr<Impl> m_impl; // PImpl pointer
 
+    protected:
         BrandingManager(); // Constructor
         virtual ~BrandingManager(); // Destructor
 
@@ -58,7 +59,7 @@ namespace branding {
          *
          * @returns An array of all registered mod branding
          */
-        std::vector<Branding> const& getBrands() const;
+        std::span<Branding> getBrands() const noexcept;
 
     public:
         // Get branding manager singleton
@@ -71,16 +72,16 @@ namespace branding {
          * @param image Sprite name, sheet frame name, or URL of the image to use as branding on this mod
          * @param type Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
          */
-        void registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite);
+        void registerBrand(std::string modId, std::string image, BrandImageType type = BrandImageType::Sprite);
 
         /**
          * Get the branding for a mod
          *
          * @param modId ID of the mod
          *
-         * @returns The object for the branding for this mod
+         * @returns The object for the branding for this mod if any
          */
-        Branding const getBrand(std::string_view modId) const;
+        geode::Result<Branding> getBrand(std::string_view modId) const;
 
         /**
          * Check if a mod already has its branding registered
@@ -91,6 +92,6 @@ namespace branding {
          *
          * @returns Whether this mod is already registered
          */
-        bool doesBrandExist(std::string_view modId, bool checkLocal = false) const;
+        bool doesBrandExist(std::string_view modId, bool checkLocal = false) const noexcept;
     };
 };

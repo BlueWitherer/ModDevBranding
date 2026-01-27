@@ -24,9 +24,9 @@ Here are some important classes we highly suggest you keep in mind while working
 
 #### class `branding::BrandingManagerV2`
 The optional variant of manager class `BrandingManager`.
-- `static Result<>` **`registerBrand(std::string const& modId, std::string const& image, BrandImageType type = BrandImageType::Sprite)`**: Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
-  - `std::string const&` **`modId`**: ID of the mod to apply branding on
-  - `std::string const&` **`image`**: Sprite name, sheet frame name, or URL of the image to use as branding on this mod
+- `static Result<>` **`registerBrand(std::string modId, std::string image, BrandImageType type = BrandImageType::Sprite)`**: Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
+  - `std::string` **`modId`**: ID of the mod to apply branding on
+  - `std::string` **`image`**: Sprite name, sheet frame name, or URL of the image to use as branding on this mod
   - `BrandImageType` **`type`**: Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
 
 #### enum class `branding::BrandImageType`

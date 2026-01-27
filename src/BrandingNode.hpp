@@ -18,13 +18,13 @@ protected:
 
     float getImageScale(CCSprite* sprite) const;
 
-    Branding brand(std::string_view modId) const;
-    bool useLocalBrand() const;
+    Result<Branding> brand(ZStringView modId) const noexcept;
+    bool useLocalBrand() const noexcept;
 
-    bool init(MDTextArea* container, std::string_view dev, std::string_view modId);
+    bool init(MDTextArea* container, std::string dev, ZStringView modId);
 
 public:
-    static BrandingNode* create(MDTextArea* container, std::string_view dev, std::string_view modId = GEODE_MOD_ID);
+    static BrandingNode* create(MDTextArea* container, std::string dev, ZStringView modId = GEODE_MOD_ID);
 
     void loadBrand();
 };

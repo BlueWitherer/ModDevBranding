@@ -8,22 +8,24 @@ using namespace geode::prelude;
 
 namespace str = utils::string;
 
+static const ZStringView urlGeode = "https://geode-sdk.org/mods/";
+
 class $nodeModify(BrandingModPopup, ModPopup) {
     struct Fields {
-        MDTextArea* m_textArea = nullptr;
+        Ref<MDTextArea> m_textArea = nullptr;
         BrandingNode* m_branding = nullptr;
 
         float m_height = 0.f;
     };
 
     void modify() {
-        auto const username = getGitUsername();
-        auto const mod = getModID();
-
-        log::debug("creating brand node for {} by {}", mod, username);
-
         if (auto md = typeinfo_cast<MDTextArea*>(getChildByIDRecursive("textarea"))) {
             log::info("found mod desc container");
+
+            auto const username = getGitUsername();
+            auto const mod = getModID();
+
+            log::debug("creating brand node for {} by {}", mod, username);
 
             auto f = m_fields.self();
 
@@ -40,7 +42,7 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
             schedule(schedule_selector(BrandingModPopup::updateBrandSize));
         } else {
-            log::error("couldn't find mod desc container");
+            log::error("couldn't find mod description container");
         };
     };
 
@@ -67,9 +69,8 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         if (auto modPageBtn = getChildByIDRecursive("mod-online-page-button")) {
             if (auto url = typeinfo_cast<CCString*>(modPageBtn->getUserObject("url"))) {
                 std::string urlStr = url->getCString();
-                constexpr std::string_view urlGeode = "https://geode-sdk.org/mods/";
 
-                if (str::startsWith(urlStr, urlGeode.data())) return urlStr.erase(0, urlGeode.size());
+                if (str::startsWith(urlStr, urlGeode)) return urlStr.erase(0, urlGeode.size());
             };
         };
 

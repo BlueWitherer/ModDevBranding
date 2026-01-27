@@ -11,8 +11,8 @@ namespace fs = std::filesystem;
 
 class BrandingNode::Impl final {
 public:
-    Branding m_brand = Branding("", "");
     std::string m_developer = "";
+    Branding m_brand = Branding("", "");
 
     bool m_retried = false;
 
@@ -29,9 +29,9 @@ BrandingNode::BrandingNode() {
 
 BrandingNode::~BrandingNode() {};
 
-bool BrandingNode::init(MDTextArea* container, std::string_view dev, std::string_view modId) {
-    m_impl->m_brand = brand(modId);
-    m_impl->m_developer = dev;
+bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
+    m_impl->m_developer = std::move(dev);
+    m_impl->m_brand = brand(modId).unwrapOr(Branding("", modId.c_str()));
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;
@@ -118,7 +118,7 @@ void BrandingNode::loadBrand() {
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
-        lazySprite->setLoadCallback([=](Result<> res) {
+        lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
             if (res.isOk()) {
                 log::info("loaded remote or test branding sprite");
 
@@ -206,23 +206,23 @@ float BrandingNode::getImageScale(CCSprite* sprite) const {
     };
 };
 
-Branding BrandingNode::brand(std::string_view modId) const {
+Result<Branding> BrandingNode::brand(ZStringView modId) const noexcept {
     if (auto bm = BrandingManager::get()) return bm->getBrand(modId);
-    return Branding("", std::string(modId));
+    return Err("BrandingManager not found");
 };
 
-bool BrandingNode::useLocalBrand() const {
+bool BrandingNode::useLocalBrand() const noexcept {
     if (auto bm = BrandingManager::get()) return bm->doesBrandExist(m_impl->m_brand.mod, true);
     return false;
 };
 
-BrandingNode* BrandingNode::create(MDTextArea* container, std::string_view dev, std::string_view modId) {
+BrandingNode* BrandingNode::create(MDTextArea* container, std::string dev, ZStringView modId) {
     auto ret = new BrandingNode();
-    if (ret->init(container, dev, modId)) {
+    if (ret->init(container, std::move(dev), modId)) {
         ret->autorelease();
         return ret;
     };
 
-    CC_SAFE_DELETE(ret);
+    delete ret;
     return nullptr;
 };
