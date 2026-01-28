@@ -14,7 +14,7 @@ matjson::Value Branding::toJson() const {
     return matjson::makeObject({
         { "image", image },
         { "mod", mod },
-        { "type", static_cast<int>(type) }
+        { "type", static_cast<int>(type) },
                                });
 };
 
@@ -26,19 +26,8 @@ Branding Branding::fromJson(matjson::Value const& v) {
     );
 };
 
-class BrandingManager::Impl final {
-public:
-    std::vector<Branding> m_brands; // Array of registered branding images
-};
-
-BrandingManager::BrandingManager() {
-    m_impl = std::make_unique<Impl>();
-};
-
-BrandingManager::~BrandingManager() {};
-
-std::span<Branding> BrandingManager::getBrands() const noexcept {
-    return m_impl->m_brands;
+std::span<const Branding> BrandingManager::getBrands() const noexcept {
+    return m_brands;
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const noexcept {
@@ -60,7 +49,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
     } else {
-        m_impl->m_brands.push_back(b);
+        m_brands.push_back(b);
         log::debug("Registered branding {} of type {} for {}", image, static_cast<int>(type), modId);
     };
 };
@@ -78,6 +67,6 @@ BrandingManager* BrandingManager::get() {
 };
 
 Result<> BrandingManagerV2::registerBrand(std::string modId, std::string image, BrandImageType type) {
-    BrandingManager::get()->registerBrand(std::move(modId), std::move(image), type);
+    if (auto bm = BrandingManager::get()) bm->registerBrand(std::move(modId), std::move(image), type);
     return Ok();
 };

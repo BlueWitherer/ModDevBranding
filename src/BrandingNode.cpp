@@ -30,8 +30,11 @@ BrandingNode::BrandingNode() {
 BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
+    auto b = brand(modId);
+    if (b.isErr()) log::error("couldn't find branding for mod {}: {}", modId, b.unwrapErr());
+
     m_impl->m_developer = std::move(dev);
-    m_impl->m_brand = brand(modId).unwrapOr(Branding("", modId.c_str()));
+    m_impl->m_brand = b.unwrapOrDefault();
     m_impl->m_container = container;
 
     if (!CCNode::init()) return false;

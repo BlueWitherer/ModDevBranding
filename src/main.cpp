@@ -27,18 +27,23 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
             log::debug("creating brand node for {} by {}", mod, username);
 
-            auto f = m_fields.self();
+            if (auto brand = BrandingNode::create(md, username, mod)) {
+                auto f = m_fields.self();
 
-            f->m_textArea = md;
-            f->m_height = md->getScaledContentHeight();
+                f->m_textArea = md;
+                f->m_height = md->getScaledContentHeight();
 
-            f->m_branding = BrandingNode::create(md, username, mod);
-            f->m_branding->setPositionX(f->m_branding->getPositionX() + 7.794f);
-            f->m_branding->setZOrder(-9);
+                brand->setPositionX(brand->getPositionX() + 7.794f);
+                brand->setZOrder(-9);
 
-            md->addChild(f->m_branding);
+                f->m_branding = brand;
 
-            log::info("added brand node for {} by {}", mod, username);
+                md->addChild(f->m_branding);
+
+                log::info("added brand node for {} by {}", mod, username);
+            } else {
+                log::error("couldn't create brand node for {} by {}", mod, username);
+            };
 
             schedule(schedule_selector(BrandingModPopup::updateBrandSize));
         } else {

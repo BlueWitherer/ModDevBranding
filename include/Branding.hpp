@@ -26,6 +26,7 @@ namespace branding {
         std::string mod;
         BrandImageType type = BrandImageType::Sprite;
 
+        Branding() = default;
         Branding(std::string i, std::string m, BrandImageType t = BrandImageType::Sprite);
 
         /**
@@ -47,19 +48,15 @@ namespace branding {
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager : public cocos2d::CCObject {
     private:
-        class Impl; // PImpl class
-        std::unique_ptr<Impl> m_impl; // PImpl pointer
+        std::vector<Branding> m_brands; // Array of registered branding images
 
     protected:
-        BrandingManager(); // Constructor
-        virtual ~BrandingManager(); // Destructor
-
         /**
          * Returns the array of all registered mod branding
          *
          * @returns An array of all registered mod branding
          */
-        std::span<Branding> getBrands() const noexcept;
+        std::span<const Branding> getBrands() const noexcept;
 
     public:
         // Get branding manager singleton
