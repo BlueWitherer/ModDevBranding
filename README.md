@@ -71,3 +71,7 @@ $on_game(Loaded){
 ### Issues
 ###### What's wrong?!
 **[⚠️ Report a problem with the mod](../../issues/)**
+
+### Development
+###### Work with the mod directly.
+**[⌨️ Check the API out](./include/)**

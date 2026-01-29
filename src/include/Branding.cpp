@@ -38,7 +38,7 @@ bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) co
 };
 
 void BrandingManager::registerBrand(std::string modId, std::string image, BrandImageType type) {
-    auto const b = Branding(
+    auto b = Branding(
         std::move(image),
         std::move(modId),
         type
@@ -49,7 +49,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
     } else {
-        m_brands.push_back(b);
+        m_brands.push_back(std::move(b));
         log::debug("Registered branding {} of type {} for {}", image, static_cast<int>(type), modId);
     };
 };
@@ -67,6 +67,10 @@ BrandingManager* BrandingManager::get() {
 };
 
 Result<> BrandingManagerV2::registerBrand(std::string modId, std::string image, BrandImageType type) {
-    if (auto bm = BrandingManager::get()) bm->registerBrand(std::move(modId), std::move(image), type);
-    return Ok();
+    if (auto bm = BrandingManager::get()) {
+        bm->registerBrand(std::move(modId), std::move(image), type);
+        return Ok();
+    };
+
+    return Err("BrandingManager not found");
 };

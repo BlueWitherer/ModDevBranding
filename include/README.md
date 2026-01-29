@@ -76,7 +76,7 @@ $on_game(Loaded){
         "me.mymod",
         "my-sprite-frame.png"_spr,
         BrandImageType::SpriteFrame
-    );
+    ); // Register a spritesheet frame as your branding
 
     if (res.isErr()) log::error("couldn't load my branding: {}", res.unwrapErr());
 };
