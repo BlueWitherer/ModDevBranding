@@ -43,7 +43,7 @@ namespace branding {
          *
          * @returns Constructed Branding object
          */
-        static Branding fromJson(matjson::Value const& v);
+        static geode::Result<Branding> fromJson(matjson::Value const& v);
     };
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager : public cocos2d::CCObject {

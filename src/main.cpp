@@ -22,12 +22,12 @@ class $nodeModify(BrandingModPopup, ModPopup) {
         if (auto md = typeinfo_cast<MDTextArea*>(getChildByIDRecursive("textarea"))) {
             log::info("found mod desc container");
 
-            auto const username = getGitUsername();
+            auto username = getGitUsername();
             auto const mod = getModID();
 
             log::debug("creating brand node for {} by {}", mod, username);
 
-            if (auto brand = BrandingNode::create(md, username, mod)) {
+            if (auto brand = BrandingNode::create(md, std::move(username), mod)) {
                 auto f = m_fields.self();
 
                 f->m_textArea = md;
@@ -40,9 +40,9 @@ class $nodeModify(BrandingModPopup, ModPopup) {
 
                 md->addChild(f->m_branding);
 
-                log::info("added brand node for {} by {}", mod, username);
+                log::info("added brand node for {} by {}", mod, brand->getDeveloper());
             } else {
-                log::error("couldn't create brand node for {} by {}", mod, username);
+                log::error("couldn't create brand node");
             };
 
             schedule(schedule_selector(BrandingModPopup::updateBrandSize));

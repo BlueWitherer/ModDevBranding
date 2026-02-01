@@ -27,4 +27,6 @@ public:
     static BrandingNode* create(MDTextArea* container, std::string dev, ZStringView modId = GEODE_MOD_ID);
 
     void loadBrand();
+
+    std::string_view getDeveloper() const noexcept;
 };

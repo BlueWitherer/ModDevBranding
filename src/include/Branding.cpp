@@ -18,12 +18,18 @@ matjson::Value Branding::toJson() const {
                                });
 };
 
-Branding Branding::fromJson(matjson::Value const& v) {
-    return Branding(
+Result<Branding> Branding::fromJson(matjson::Value const& v) {
+    if (v.isNull()) return Err("JSON value is null");
+
+    if (v["image"].isNull()) return Err("Image is missing");
+    if (v["mod"].isNull()) return Err("Mod is missing");
+    if (v["type"].isNull()) return Err("Type is missing");
+
+    return Ok(Branding(
         v["image"].asString().unwrapOr(""),
         v["mod"].asString().unwrapOr(""),
         static_cast<BrandImageType>(v["type"].asInt().unwrapOr(0))
-    );
+    ));
 };
 
 std::span<const Branding> BrandingManager::getBrands() const noexcept {
@@ -49,14 +55,14 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
     } else {
+        log::debug("Registered branding {} of type {} for {}", b.image, static_cast<int>(b.type), b.mod);
         m_brands.push_back(std::move(b));
-        log::debug("Registered branding {} of type {} for {}", image, static_cast<int>(type), modId);
     };
 };
 
 Result<Branding> BrandingManager::getBrand(std::string_view modId) const {
     for (auto const& b : getBrands()) if (b.mod == modId) return Ok(b);
-    if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Ok(Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJson())));
+    if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJson()));
 
     return Err("Branding not found");
 };
