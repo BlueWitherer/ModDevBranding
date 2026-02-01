@@ -21,9 +21,9 @@ matjson::Value Branding::toJson() const {
 Result<Branding> Branding::fromJson(matjson::Value const& v) {
     if (v.isNull()) return Err("JSON value is null");
 
-    if (v["image"].isNull()) return Err("Image is missing");
-    if (v["mod"].isNull()) return Err("Mod is missing");
-    if (v["type"].isNull()) return Err("Type is missing");
+    if (v["image"].isNull()) return Err("Image value is missing");
+    if (v["mod"].isNull()) return Err("Mod value is missing");
+    if (v["type"].isNull()) return Err("Type value is missing");
 
     return Ok(Branding(
         v["image"].asString().unwrapOr(""),
@@ -52,8 +52,8 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
 
     Mod::get()->setSavedValue<matjson::Value>(modId, b.toJson());
 
-    if (doesBrandExist(modId)) {
-        log::error("Could not register branding for {} because one already exists!", modId);
+    if (doesBrandExist(b.mod)) {
+        log::error("Could not register branding for {} because one already exists!", b.mod);
     } else {
         log::debug("Registered branding {} of type {} for {}", b.image, static_cast<int>(b.type), b.mod);
         m_brands.push_back(std::move(b));
