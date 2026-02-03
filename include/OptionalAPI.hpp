@@ -13,7 +13,7 @@
 
 namespace branding {
     // Optional variant of `BrandingManager`
-    class BrandingManagerV2 {
+    class BrandingManagerV2 final {
     public:
         static geode::Result<> registerBrand(std::string modId, std::string image, BrandImageType type = BrandImageType::Sprite)
             GEODE_EVENT_EXPORT(&BrandingManagerV2::registerBrand, (modId, image, type));

@@ -46,7 +46,7 @@ namespace branding {
         static geode::Result<Branding> fromJson(matjson::Value const& v);
     };
 
-    class CW_MODDEVBRANDING_API_DLL BrandingManager : public cocos2d::CCObject {
+    class CW_MODDEVBRANDING_API_DLL BrandingManager final : public cocos2d::CCObject {
     private:
         std::vector<Branding> m_brands; // Array of registered branding images
 
@@ -54,7 +54,7 @@ namespace branding {
         /**
          * Returns the array of all registered mod branding
          *
-         * @returns An array of all registered mod branding
+         * @returns The array of all registered mod branding
          */
         std::span<const Branding> getBrands() const noexcept;
 
