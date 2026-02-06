@@ -31,7 +31,7 @@ BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
     auto b = brand(modId);
-    if (b.isErr()) log::error("couldn't find branding for mod {}: {}", modId, b.unwrapErr());
+    if (b.isErr()) log::error("Couldn't find branding for mod {}: {}", modId, b.unwrapErr());
 
     m_impl->developer = std::move(dev);
     m_impl->brand = b.unwrapOrDefault();
@@ -53,17 +53,17 @@ void BrandingNode::loadBrand() {
     setContentSize(m_impl->container->getScaledContentSize());
     removeAllChildrenWithCleanup(true);
 
-    log::debug("loading brand for mod {}", m_impl->brand.mod);
+    log::debug("Loading brand for mod {}", m_impl->brand.mod);
 
     LazySprite* lazySprite = nullptr;
 
     auto localBrand = useLocalBrand();
     if (localBrand) {
-        log::debug("using local brand for mod {}", m_impl->brand.mod);
+        log::debug("Using local brand for mod {}", m_impl->brand.mod);
 
         CCSprite* sprite = nullptr;
 
-        log::debug("scanning brand image node type for {}...", m_impl->brand.mod);
+        log::debug("Scanning brand image node type for {}...", m_impl->brand.mod);
         log::debug("{} uses {} as source image for branding", m_impl->brand.mod, m_impl->brand.image);
 
         switch (m_impl->brand.type) {
@@ -91,10 +91,10 @@ void BrandingNode::loadBrand() {
         };
         };
 
-        log::debug("processing local branding image {}", m_impl->brand.image);
+        log::debug("Processing local branding image {}", m_impl->brand.image);
 
         if (sprite) {
-            log::debug("branding sprite found");
+            log::debug("Branding sprite found");
 
             sprite->setID("brand"_spr);
             sprite->setOpacity(m_impl->opacity);
@@ -104,18 +104,18 @@ void BrandingNode::loadBrand() {
 
             addChild(sprite);
 
-            log::info("loaded local branding sprite");
+            log::info("Loaded local branding sprite");
         } else {
-            log::error("no branding sprite created");
+            log::error("No branding sprite created");
         };
     } else {
-        log::debug("using remote or test brand for mod {}", m_impl->brand.mod);
+        log::debug("Using remote or test brand for mod {}", m_impl->brand.mod);
         lazySprite = LazySprite::create(m_impl->container->getScaledContentSize(), false);
-        log::debug("processing remote branding image {}", m_impl->brand.image);
+        log::debug("Processing remote branding image {}", m_impl->brand.image);
     };
 
     if (lazySprite) {
-        log::debug("branding lazysprite found");
+        log::debug("Branding lazysprite found");
 
         lazySprite->setID("brand"_spr);
         lazySprite->setAnchorPoint({ 1, 0 });
@@ -123,23 +123,24 @@ void BrandingNode::loadBrand() {
 
         lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
             if (res.isOk()) {
-                log::info("loaded remote or test branding sprite");
+                log::info("Loaded remote or test branding sprite");
 
                 lazySprite->setOpacity(m_impl->opacity);
                 lazySprite->setAnchorPoint({ 1, 0 });
                 lazySprite->setPosition({ getScaledContentWidth(), 0.f });
                 lazySprite->setScale(getImageScale(lazySprite));
             } else if (res.isErr()) {
-                log::error("failed to load remote or test branding sprite: {}", res.unwrapErr());
+                log::error("Failed to load remote or test branding sprite: {}", res.unwrapErr());
+                if (m_impl->retried) return lazySprite->stopAllActions();
                 if (!m_impl->retried) retryRemoteLoad(lazySprite);
             } else {
-                log::error("unknown error when loading or test remote branding sprite");
+                log::error("Unknown error when loading or test remote branding sprite");
                 lazySprite->removeMeAndCleanup();
             };
                                     });
 
         if (m_impl->brand.mod == GEODE_MOD_ID) {
-            log::debug("attempting to load local test brand image");
+            log::debug("Attempting to load local test brand image");
 
             // @geode-ignore(unknown-setting)
             auto const path = Mod::get()->getSettingValue<fs::path>("preview-image");
@@ -147,7 +148,7 @@ void BrandingNode::loadBrand() {
                 lazySprite->loadFromFile(path, CCImage::kFmtUnKnown, true);
                 return;
             } else {
-                log::error("couldn't load local test brand image");
+                log::error("Couldn't load local test brand image");
             };
         };
 
@@ -157,19 +158,21 @@ void BrandingNode::loadBrand() {
         if (localBrand) {
             reqUrl = m_impl->brand.image;
         } else {
-            auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
-            reqUrl = fmt::format("{}{}", std::move(url), m_impl->useWebP ? "&fmt=webp" : "");
+            auto const url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}", m_impl->developer);
+            reqUrl = fmt::format("{}{}", url, m_impl->useWebP ? "&fmt=webp" : "");
         };
 
-        log::debug("requesting brand image from {} for mod {}", reqUrl, m_impl->brand.mod);
-        if (reqUrl.size() > 0) lazySprite->loadFromUrl(reqUrl.c_str());
+        if (reqUrl.size() > 0) {
+            log::debug("Requesting brand image from {} for mod {}", reqUrl, m_impl->brand.mod);
+            lazySprite->loadFromUrl(reqUrl.c_str());
 
-        // cancel load after timeout
-        log::debug("scheduling image load cancel for {} after {} seconds", reqUrl, m_impl->timeout);
-        lazySprite->runAction(CCSequence::createWithTwoActions(
-            CCDelayTime::create(m_impl->timeout),
-            CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))
-        ));
+            // cancel load after timeout
+            log::debug("Scheduling image load cancel for {} after {} seconds", reqUrl, m_impl->timeout);
+            lazySprite->runAction(CCSequence::createWithTwoActions(
+                CCDelayTime::create(m_impl->timeout),
+                CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))
+            ));
+        };
     } else {
         if (localBrand) log::error("no branding lazysprite created");
     };
@@ -182,15 +185,15 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
         auto url = fmt::format("https://moddev.cheeseworks.gay/api/v1/image?dev={}&mod={}", m_impl->developer, m_impl->brand.mod);
         auto const reqUrl = fmt::format("{}{}", std::move(url), m_impl->useWebP ? "&fmt=webp" : "");
 
-        log::debug("retrying request for brand image from {} for mod {}", reqUrl, m_impl->brand.mod);
+        log::debug("Retrying request for brand image from {} for mod {}", reqUrl, m_impl->brand.mod);
         sender->loadFromUrl(reqUrl.c_str());
     } else {
-        log::error("lazysprite is missing");
+        log::error("LazySprite is missing");
     };
 };
 
 void BrandingNode::cancelRemoteLoad(CCNode* sender) {
-    log::warn("attempting to cancel remote or test brand image load");
+    log::warn("Attempting to cancel remote or test brand image load");
     if (auto lazySprite = typeinfo_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
 };
 
@@ -204,7 +207,7 @@ float BrandingNode::getImageScale(CCSprite* sprite) const {
 
         return scale;
     } else {
-        log::error("branding container or sprite not found");
+        log::error("Branding container or sprite not found");
         return 1.f;
     };
 };

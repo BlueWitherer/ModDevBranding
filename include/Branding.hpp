@@ -85,7 +85,7 @@ namespace branding {
          * @attention The `registerBrand` function already uses this function internally
          *
          * @param modId ID of the mod
-         * @param checkLocal Whether to check local save data
+         * @param checkLocal Whether to also check local save data
          *
          * @returns Whether this mod is already registered
          */
