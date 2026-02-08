@@ -15,10 +15,11 @@
 #include <Geode/Result.hpp>
 
 namespace branding {
+    // Source of the provided branding image
     enum class BrandImageType : unsigned int {
-        URL = 0,
-        Sprite = 1,
-        SpriteFrame = 2,
+        URL = 0, // Remote image URL
+        Sprite = 1, // Mod sprite image
+        SpriteFrame = 2, // Mod spritesheet frame
     };
 
     struct Branding {
@@ -34,7 +35,7 @@ namespace branding {
          *
          * @returns Constructed matjson object
          */
-        matjson::Value toJson() const;
+        matjson::Value toJSON() const;
 
         /**
          * Returns a Branding struct constructed from a matjson object
@@ -43,7 +44,7 @@ namespace branding {
          *
          * @returns Constructed Branding object
          */
-        static geode::Result<Branding> fromJson(matjson::Value const& v);
+        static geode::Result<Branding> fromJSON(matjson::Value const& v);
     };
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager final : public cocos2d::CCObject {

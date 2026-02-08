@@ -10,7 +10,7 @@ using namespace branding;
 Branding::Branding(std::string i, std::string m, BrandImageType t)
     : image(std::move(i)), mod(std::move(m)), type(t) {};
 
-matjson::Value Branding::toJson() const {
+matjson::Value Branding::toJSON() const {
     return matjson::makeObject({
         { "image", image },
         { "mod", mod },
@@ -18,7 +18,7 @@ matjson::Value Branding::toJson() const {
                                });
 };
 
-Result<Branding> Branding::fromJson(matjson::Value const& v) {
+Result<Branding> Branding::fromJSON(matjson::Value const& v) {
     if (v.isNull()) return Err("JSON value is null");
 
     if (v["image"].isNull()) return Err("Image value is missing");
@@ -50,7 +50,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
         type
     );
 
-    Mod::get()->setSavedValue<matjson::Value>(modId, b.toJson());
+    Mod::get()->setSavedValue<matjson::Value>(modId, b.toJSON());
 
     if (doesBrandExist(b.mod)) {
         log::error("Could not register branding for {} because one already exists!", b.mod);
@@ -62,7 +62,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
 
 Result<Branding> BrandingManager::getBrand(std::string_view modId) const {
     for (auto const& b : getBrands()) if (b.mod == modId) return Ok(b);
-    if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJson(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJson()));
+    if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJSON(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJSON()));
 
     return Err("Branding not found");
 };
@@ -72,7 +72,7 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<> BrandingManagerV2::registerBrand(std::string modId, std::string image, BrandImageType type) {
+Result<> branding::registerBrand(std::string modId, std::string image, BrandImageType type) {
     if (auto bm = BrandingManager::get()) {
         bm->registerBrand(std::move(modId), std::move(image), type);
         return Ok();

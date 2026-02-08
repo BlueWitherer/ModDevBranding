@@ -6,10 +6,11 @@ using namespace geode::prelude;
 using namespace branding;
 
 class BrandingNode : public CCNode {
-protected:
+private:
     class Impl;
     std::unique_ptr<Impl> m_impl;
 
+protected:
     BrandingNode();
     virtual ~BrandingNode();
 
