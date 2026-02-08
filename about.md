@@ -28,13 +28,11 @@ You can use the <cg>**`Test Brand Image`** setting</c> to <cy>preview your brand
 Want to add branding for your mod specifically? You can register your very own branding with your mod by using this mod's optional API! You can see its [documentation here](https://www.github.com/BlueWitherer/ModDevBranding/tree/master/include/). Add some more style to your mods!
 
 ```cpp
-using namespace branding;
-
 $on_game(Loaded){
-    auto res = BrandingManagerV2::registerBrand(
-        "awesomeguy.myepicmod",
+    auto res = branding::registerBrand(
+        GEODE_MOD_ID,
         "my-beautiful-sprite.png"_spr,
-        BrandImageType::SpriteFrame
+        branding::Type::SpriteFrame
     );
 
     if (res.isErr()) log::error("couldn't load my mod branding: {}", res.unwrapErr());

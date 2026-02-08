@@ -67,28 +67,24 @@ void BrandingNode::loadBrand() {
         log::debug("{} uses {} as source image for branding", m_impl->brand.mod, m_impl->brand.image);
 
         switch (m_impl->brand.type) {
-        case BrandImageType::URL: {
-            log::debug("{} requested a url", m_impl->brand.mod);
-            lazySprite = LazySprite::create(m_impl->container->getScaledContentSize(), false);
-            break;
-        };
+            case BrandImageType::URL: {
+                log::debug("{} requested a url", m_impl->brand.mod);
+                lazySprite = LazySprite::create(m_impl->container->getScaledContentSize(), false);
+            } break;
 
-        case BrandImageType::Sprite: {
-            log::debug("{} requested a sprite", m_impl->brand.mod);
-            sprite = CCSprite::create(m_impl->brand.image.c_str());
-            break;
-        };
+            case BrandImageType::Sprite: {
+                log::debug("{} requested a sprite", m_impl->brand.mod);
+                sprite = CCSprite::create(m_impl->brand.image.c_str());
+            } break;
 
-        case BrandImageType::SpriteFrame: {
-            log::debug("{} requested a sprite frame", m_impl->brand.mod);
-            sprite = CCSprite::createWithSpriteFrameName(m_impl->brand.image.c_str());
-            break;
-        };
+            case BrandImageType::SpriteFrame: {
+                log::debug("{} requested a sprite frame", m_impl->brand.mod);
+                sprite = CCSprite::createWithSpriteFrameName(m_impl->brand.image.c_str());
+            } break;
 
-        default: {
-            log::error("{} requested unknown image node type", m_impl->brand.mod);
-            return;
-        };
+            default: {
+                log::error("{} requested unknown image node type", m_impl->brand.mod);
+            } return;
         };
 
         log::debug("Processing local branding image {}", m_impl->brand.image);

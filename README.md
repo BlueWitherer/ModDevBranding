@@ -35,13 +35,11 @@ You can use the **`Test Brand Image`** setting to preview your branding in-game 
 Want to add branding for your mod specifically? You can register your very own branding with your mod by using this mod's optional API! You can see its [documentation here](./include). Add some more style to your mods!
 
 ```cpp
-using namespace branding;
-
 $on_game(Loaded){
-    auto res = BrandingManagerV2::registerBrand(
-        "awesomeguy.myepicmod",
+    auto res = branding::registerBrand(
+        GEODE_MOD_ID,
         "my-beautiful-sprite.png"_spr,
-        BrandImageType::SpriteFrame
+        branding::Type::SpriteFrame
     );
 
     if (res.isErr()) log::error("couldn't load my mod branding: {}", res.unwrapErr());
