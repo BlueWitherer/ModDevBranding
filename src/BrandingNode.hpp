@@ -12,7 +12,7 @@ private:
 
 protected:
     BrandingNode();
-    virtual ~BrandingNode();
+    ~BrandingNode();
 
     void retryRemoteLoad(LazySprite* sender);
     void cancelRemoteLoad(CCNode* sender);
