@@ -1,5 +1,5 @@
 {
-    "geode": "5.0.0-alpha.2",
+    "geode": "5.0.0-beta.1",
     "gd": {
         "win": "2.2081",
         "android": "2.2081",
@@ -22,7 +22,7 @@
         "community": "https://www.dsc.gg/cheeseworks"
     },
     "dependencies": {
-        "alphalaneous.alphas_geode_utils": ">=1.2.0-beta.1"
+        "alphalaneous.alphas_geode_utils": ">=1.2.0"
     },
     "api": {
         "include": [
