@@ -18,7 +18,7 @@ This mod adds a beautiful branding image from the main developer of a mod or the
 ---
 
 ### Submit Branding
-**If you're a *mod developer***, go to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to submit your branding! It will automatically appear on *all* of your mods. You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.
+**If you're an *active mod developer***, go to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access the dashboard to submit your branding! It will automatically appear on *all* of your mods. You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.
 
 > [!IMPORTANT]
 > *If you have **no Geode index history**, your submission may either be **postponed in review** or **rejected**.*
@@ -32,7 +32,7 @@ You can use the **`Test Brand Image`** setting to preview your branding in-game 
 ---
 
 ### Developers
-Want to add branding for your mod specifically? You can register your very own branding with your mod by using this mod's optional API! You can see its [documentation here](./include). Add some more style to your mods!
+Want to add branding for your mod specifically? You can register your very own branding with your mod by using this mod's optional API! You can see its [documentation here](./include). Add some more style to your mod pages!
 
 ```cpp
 $on_game(Loaded){
