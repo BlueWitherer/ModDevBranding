@@ -23,10 +23,7 @@ public:
     bool useWebP = Loader::get()->isModLoaded("prevter.imageplus");
 };
 
-BrandingNode::BrandingNode() {
-    m_impl = std::make_unique<Impl>();
-};
-
+BrandingNode::BrandingNode() : m_impl(std::make_unique<Impl>()) {};
 BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
@@ -34,7 +31,7 @@ bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modI
     if (b.isErr()) log::error("Couldn't find branding for mod {}: {}", modId, b.unwrapErr());
 
     m_impl->developer = std::move(dev);
-    m_impl->brand = b.unwrapOrDefault();
+    m_impl->brand = modId == GEODE_MOD_ID ? Branding("", GEODE_MOD_ID) : b.unwrapOrDefault();
     m_impl->container = container;
 
     if (!CCNode::init()) return false;
