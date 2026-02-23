@@ -22,7 +22,7 @@ namespace branding {
         SpriteFrame = 2, // Mod spritesheet frame
     };
 
-    struct Branding {
+    struct Branding final {
         std::string image;
         std::string mod;
         BrandImageType type = BrandImageType::Sprite;
@@ -79,7 +79,7 @@ namespace branding {
          *
          * @returns The object for the branding for this mod if any
          */
-        geode::Result<Branding> getBrand(std::string_view modId) const;
+        [[nodiscard]] geode::Result<Branding> getBrand(std::string_view modId) const;
 
         /**
          * Check if a mod already has its branding registered

@@ -1,6 +1,7 @@
 # v2.0.0 
 - Ported to Geometry Dash version `2.2081`
   - Bumped Geode loader support to `v5.0.0`
+- Fixed issue with loading test brand image
 - Internal optimizations
 - API rewrite
 

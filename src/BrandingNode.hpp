@@ -5,7 +5,7 @@
 using namespace geode::prelude;
 using namespace branding;
 
-class BrandingNode : public CCNode {
+class BrandingNode final : public CCNode {
 private:
     class Impl;
     std::unique_ptr<Impl> m_impl;
