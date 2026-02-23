@@ -31,10 +31,12 @@ bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modI
     if (b.isErr()) log::error("Couldn't find branding for mod {}: {}", modId, b.unwrapErr());
 
     m_impl->developer = std::move(dev);
-    m_impl->brand = modId == GEODE_MOD_ID ? Branding("", GEODE_MOD_ID) : b.unwrapOrDefault();
+    m_impl->brand = b.unwrapOrDefault();
     m_impl->container = container;
 
     if (!CCNode::init()) return false;
+
+    m_impl->brand.mod = modId;
 
     setID("branding"_spr);
     setAnchorPoint({ 1, 0 });
@@ -114,6 +116,8 @@ void BrandingNode::loadBrand() {
         lazySprite->setAnchorPoint({ 1, 0 });
         lazySprite->setPosition({ getScaledContentWidth(), 0.f });
 
+        addChild(lazySprite);
+
         lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
             if (res.isOk()) {
                 log::info("Loaded remote or test branding sprite");
@@ -144,8 +148,6 @@ void BrandingNode::loadBrand() {
                 log::error("Couldn't load local test brand image");
             };
         };
-
-        addChild(lazySprite);
 
         std::string reqUrl;
         if (localBrand) {
