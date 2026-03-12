@@ -17,9 +17,9 @@
 namespace branding {
     // Source of the provided branding image
     enum class BrandImageType : unsigned int {
-        URL = 0, // Remote image URL
-        Sprite = 1, // Mod sprite image
-        SpriteFrame = 2, // Mod spritesheet frame
+        URL = 0,          // Remote image URL
+        Sprite = 1,       // Mod sprite image
+        SpriteFrame = 2,  // Mod spritesheet frame
     };
 
     struct Branding final {
@@ -49,7 +49,7 @@ namespace branding {
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager final : public cocos2d::CCObject {
     private:
-        std::vector<Branding> m_brands; // Array of registered branding images
+        std::vector<Branding> m_brands;  // Array of registered branding images
 
     protected:
         /**

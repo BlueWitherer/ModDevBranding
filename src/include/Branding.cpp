@@ -7,15 +7,14 @@
 using namespace geode::prelude;
 using namespace branding;
 
-Branding::Branding(std::string i, std::string m, BrandImageType t)
-    : image(std::move(i)), mod(std::move(m)), type(t) {};
+Branding::Branding(std::string i, std::string m, BrandImageType t) : image(std::move(i)), mod(std::move(m)), type(t) {};
 
 matjson::Value Branding::toJSON() const {
     return matjson::makeObject({
-        { "image", image },
-        { "mod", mod },
-        { "type", static_cast<int>(type) },
-                               });
+        {"image", image},
+        {"mod", mod},
+        {"type", static_cast<int>(type)},
+    });
 };
 
 Result<Branding> Branding::fromJSON(matjson::Value const& v) {
@@ -28,8 +27,7 @@ Result<Branding> Branding::fromJSON(matjson::Value const& v) {
     return Ok(Branding(
         v["image"].asString().unwrapOr(""),
         v["mod"].asString().unwrapOr(""),
-        static_cast<BrandImageType>(v["type"].asInt().unwrapOr(0))
-    ));
+        static_cast<BrandImageType>(v["type"].asInt().unwrapOr(0))));
 };
 
 std::span<const Branding> BrandingManager::getBrands() const noexcept {
@@ -37,7 +35,8 @@ std::span<const Branding> BrandingManager::getBrands() const noexcept {
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const noexcept {
-    for (auto const& brand : getBrands()) if (brand.mod == modId) return true;
+    for (auto const& brand : getBrands())
+        if (brand.mod == modId) return true;
     if (auto m = Mod::get()) return checkLocal && m->hasSavedValue(modId);
 
     return false;
@@ -47,8 +46,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
     auto b = Branding(
         std::move(image),
         std::move(modId),
-        type
-    );
+        type);
 
     Mod::get()->setSavedValue<matjson::Value>(modId, b.toJSON());
 
@@ -61,7 +59,8 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
 };
 
 Result<Branding> BrandingManager::getBrand(std::string_view modId) const {
-    for (auto const& b : getBrands()) if (b.mod == modId) return Ok(b);
+    for (auto const& b : getBrands())
+        if (b.mod == modId) return Ok(b);
     if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJSON(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJSON()));
 
     return Err("Branding not found");

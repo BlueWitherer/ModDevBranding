@@ -39,9 +39,9 @@ bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modI
     m_impl->brand.mod = modId;
 
     setID("branding"_spr);
-    setAnchorPoint({ 1, 0 });
+    setAnchorPoint({1, 0});
     setContentSize(container->getScaledContentSize());
-    setPosition({ container->getScaledContentWidth(), 0.f });
+    setPosition({container->getScaledContentWidth(), 0.f});
 
     loadBrand();
 
@@ -83,7 +83,8 @@ void BrandingNode::loadBrand() {
 
             default: {
                 log::error("{} requested unknown image node type", m_impl->brand.mod);
-            } return;
+            }
+                return;
         };
 
         log::debug("Processing local branding image {}", m_impl->brand.image);
@@ -93,8 +94,8 @@ void BrandingNode::loadBrand() {
 
             sprite->setID("brand"_spr);
             sprite->setOpacity(m_impl->opacity);
-            sprite->setAnchorPoint({ 1, 0 });
-            sprite->setPosition({ getScaledContentWidth(), 0.f });
+            sprite->setAnchorPoint({1, 0});
+            sprite->setPosition({getScaledContentWidth(), 0.f});
             sprite->setScale(getImageScale(sprite));
 
             addChild(sprite);
@@ -113,8 +114,8 @@ void BrandingNode::loadBrand() {
         log::debug("Branding lazysprite found");
 
         lazySprite->setID("brand"_spr);
-        lazySprite->setAnchorPoint({ 1, 0 });
-        lazySprite->setPosition({ getScaledContentWidth(), 0.f });
+        lazySprite->setAnchorPoint({1, 0});
+        lazySprite->setPosition({getScaledContentWidth(), 0.f});
 
         addChild(lazySprite);
 
@@ -123,8 +124,8 @@ void BrandingNode::loadBrand() {
                 log::info("Loaded remote or test branding sprite");
 
                 lazySprite->setOpacity(m_impl->opacity);
-                lazySprite->setAnchorPoint({ 1, 0 });
-                lazySprite->setPosition({ getScaledContentWidth(), 0.f });
+                lazySprite->setAnchorPoint({1, 0});
+                lazySprite->setPosition({getScaledContentWidth(), 0.f});
                 lazySprite->setScale(getImageScale(lazySprite));
             } else if (res.isErr()) {
                 log::error("Failed to load remote or test branding sprite: {}", res.unwrapErr());
@@ -134,7 +135,7 @@ void BrandingNode::loadBrand() {
                 log::error("Unknown error when loading or test remote branding sprite");
                 lazySprite->removeMeAndCleanup();
             };
-                                    });
+        });
 
         if (m_impl->brand.mod == GEODE_MOD_ID) {
             log::debug("Attempting to load local test brand image");
@@ -165,8 +166,7 @@ void BrandingNode::loadBrand() {
             log::debug("Scheduling image load cancel for {} after {} seconds", reqUrl, m_impl->timeout);
             lazySprite->runAction(CCSequence::createWithTwoActions(
                 CCDelayTime::create(m_impl->timeout),
-                CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))
-            ));
+                CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))));
         };
     } else {
         if (localBrand) log::error("no branding lazysprite created");
