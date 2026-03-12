@@ -1,3 +1,6 @@
+# v2.0.1 
+- Use `branding::BrandImageType` type alias in optional API header
+
 # v2.0.0 
 - Ported to Geometry Dash version `2.2081`
   - Bumped Geode loader support to `v5.0.0`

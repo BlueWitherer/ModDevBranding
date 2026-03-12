@@ -71,7 +71,7 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<> branding::registerBrand(std::string modId, std::string image, BrandImageType type) {
+Result<> branding::registerBrand(std::string modId, std::string image, branding::Type type) {
     if (auto bm = BrandingManager::get()) {
         bm->registerBrand(std::move(modId), std::move(image), type);
         return Ok();

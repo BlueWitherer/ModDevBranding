@@ -22,6 +22,6 @@ namespace branding {
      * @param image Sprite name, sheet frame name, or URL of the image to use as branding on this mod
      * @param type Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
      */
-    inline geode::Result<> registerBrand(std::string modId, std::string image, BrandImageType type = BrandImageType::Sprite)
+    inline geode::Result<> registerBrand(std::string modId, std::string image, branding::Type type = branding::Type::Sprite)
         GEODE_EVENT_EXPORT(&branding::registerBrand, (modId, image, type));
 };
