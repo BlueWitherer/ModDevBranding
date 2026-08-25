@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Branding.hpp"
+#include "API.h"
 
 #include <Geode/Result.hpp>
 
@@ -12,9 +12,6 @@
 #define MY_MOD_ID "cheeseworks.moddevbranding"
 
 namespace branding {
-    // Alias for `branding::BrandImageType` enum class
-    using Type = branding::BrandImageType;
-
     /**
      * Register your very own branding image to appear on your mod! Internally checks for duplicate mod entries
      *

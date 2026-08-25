@@ -1,4 +1,4 @@
-#include "BrandingNode.hpp"
+#include "BrandingNode.h"
 
 #include <Geode/Geode.hpp>
 

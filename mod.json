@@ -1,5 +1,5 @@
 {
-    "geode": "5.0.0",
+    "geode": "5.9.0",
     "gd": {
         "win": "2.2081",
         "android": "2.2081",
@@ -8,12 +8,13 @@
     },
     "id": "cheeseworks.moddevbranding",
     "name": "Mod Developer Branding",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "developers": [
         "Cheeseworks"
     ],
     "description": "Developer branding on mod info popups.",
     "tags": [
+        "online",
         "enhancement"
     ],
     "links": {

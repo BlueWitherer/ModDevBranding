@@ -1,13 +1,13 @@
 #define GEODE_DEFINE_EVENT_EXPORTS
-#include <Branding.hpp>
+#include <API.h>
 #include <OptionalAPI.hpp>
 
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
-using namespace branding;
+using namespace cw::brand;
 
-Branding::Branding(std::string i, std::string m, BrandImageType t) : image(std::move(i)), mod(std::move(m)), type(t) {};
+Branding::Branding(std::string i, std::string m, Type t) : image(std::move(i)), mod(std::move(m)), type(t) {};
 
 matjson::Value Branding::toJSON() const {
     return matjson::makeObject({
@@ -18,25 +18,20 @@ matjson::Value Branding::toJSON() const {
 };
 
 Result<Branding> Branding::fromJSON(matjson::Value const& v) {
-    if (v.isNull()) return Err("JSON value is null");
+    if (!v.isObject()) return Err("JSON value is not an object");
 
-    if (v["image"].isNull()) return Err("Image value is missing");
-    if (v["mod"].isNull()) return Err("Mod value is missing");
-    if (v["type"].isNull()) return Err("Type value is missing");
+    GEODE_UNWRAP_INTO(std::string image, v["image"].asString());
+    GEODE_UNWRAP_INTO(std::string mod, v["mod"].asString());
+    GEODE_UNWRAP_INTO(unsigned int type, v["type"].asUInt());
 
     return Ok(Branding(
-        v["image"].asString().unwrapOr(""),
-        v["mod"].asString().unwrapOr(""),
-        static_cast<BrandImageType>(v["type"].asInt().unwrapOr(0))));
-};
-
-std::span<const Branding> BrandingManager::getBrands() const noexcept {
-    return m_brands;
+        std::move(image),
+        std::move(mod),
+        static_cast<Type>(type)));
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const noexcept {
-    for (auto const& brand : getBrands())
-        if (brand.mod == modId) return true;
+    if (auto it = m_brands.find(modId); it != m_brands.end()) return true;
     if (auto m = Mod::get()) return checkLocal && m->hasSavedValue(modId);
 
     return false;
@@ -45,7 +40,7 @@ bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) co
 void BrandingManager::registerBrand(std::string modId, std::string image, BrandImageType type) {
     auto b = Branding(
         std::move(image),
-        std::move(modId),
+        modId,
         type);
 
     Mod::get()->setSavedValue<matjson::Value>(modId, b.toJSON());
@@ -54,14 +49,13 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
         log::error("Could not register branding for {} because one already exists!", b.mod);
     } else {
         log::debug("Registered branding {} of type {} for {}", b.image, static_cast<int>(b.type), b.mod);
-        m_brands.push_back(std::move(b));
+        m_brands[std::move(modId)] = std::move(b);
     };
 };
 
 Result<Branding> BrandingManager::getBrand(std::string_view modId) const {
-    for (auto const& b : getBrands())
-        if (b.mod == modId) return Ok(b);
-    if (Loader::get()->isModInstalled(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJSON(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJSON()));
+    if (auto it = m_brands.find(modId); it != m_brands.end()) return Ok(it->second);
+    if (Loader::get()->isModLoaded(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJSON(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJSON()));
 
     return Err("Branding not found");
 };
@@ -71,7 +65,7 @@ BrandingManager* BrandingManager::get() {
     return inst;
 };
 
-Result<> branding::registerBrand(std::string modId, std::string image, branding::Type type) {
+Result<> branding::registerBrand(std::string modId, std::string image, Type type) {
     if (auto bm = BrandingManager::get()) {
         bm->registerBrand(std::move(modId), std::move(image), type);
         return Ok();

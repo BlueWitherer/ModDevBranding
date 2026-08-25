@@ -15,6 +15,9 @@ Developer branding on mod info popups.
 ## About
 This mod adds a beautiful branding image from the main developer of a mod or the mod itself onto its information popup.
 
+> [!NOTE]
+> *This is an **online** mod. **Check [status.cheeseworks.gay](https://status.cheeseworks.gay/)** before reporting any connectivity issues!*
+
 ---
 
 ### Submit Branding
@@ -35,14 +38,12 @@ You can use the **`Test Brand Image`** setting to preview your branding in-game 
 Want to add branding for your mod specifically? You can register your very own branding with your mod by using this mod's optional API! You can see its [documentation here](./include). Add some more style to your mod pages!
 
 ```cpp
-$on_game(Loaded){
-    auto res = branding::registerBrand(
+$on_game(ModsLoaded){
+    (void)cw::brand::registerBrand(
         GEODE_MOD_ID,
         "my-beautiful-sprite.png"_spr,
-        branding::Type::SpriteFrame
+        cw::brand::Type::SpriteFrame
     );
-
-    if (res.isErr()) log::error("couldn't load my mod branding: {}", res.unwrapErr());
 };
 ```
 
@@ -50,7 +51,6 @@ $on_game(Loaded){
 
 ### Credits
 - **[ArcticWoof](https://www.github.com/DumbCaveSpider/)**: Designed branding dashboard website frontend
-- **[Alphalaneous](https://www.github.com/Alphalaneous/)**: Original [Mod Developer Branding](https://www.github.com/Alphalaneous/ModDevBranding/) project
 
 ---
 

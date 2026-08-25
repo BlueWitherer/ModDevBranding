@@ -1,6 +1,6 @@
-#include "BrandingNode.hpp"
+#include "BrandingNode.h"
 
-#include <Branding.hpp>
+#include <API.h>
 
 #include <Geode/Geode.hpp>
 

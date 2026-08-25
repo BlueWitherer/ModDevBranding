@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef GEODE_IS_WINDOWS
-#ifdef CW_MODDEVBRANDING_API_EXPORTING
+#ifdef ModDevBranding_EXPORTS
 #define CW_MODDEVBRANDING_API_DLL __declspec(dllexport)
 #else
 #define CW_MODDEVBRANDING_API_DLL __declspec(dllimport)
@@ -22,13 +22,16 @@ namespace branding {
         SpriteFrame = 2,  // Mod spritesheet frame
     };
 
+    // Alias for `cw::brand::BrandImageType` enum class
+    using Type = branding::BrandImageType;
+
     struct Branding final {
         std::string image;
         std::string mod;
-        BrandImageType type = BrandImageType::Sprite;
+        Type type = Type::Sprite;
 
         Branding() = default;
-        Branding(std::string i, std::string m, BrandImageType t = BrandImageType::Sprite);
+        Branding(std::string i, std::string m, Type t = Type::Sprite);
 
         /**
          * Returns a matjson object constructed from a constructed Branding struct
@@ -49,15 +52,7 @@ namespace branding {
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager final : public cocos2d::CCObject {
     private:
-        std::vector<Branding> m_brands;  // Array of registered branding images
-
-    protected:
-        /**
-         * Returns the array of all registered mod branding
-         *
-         * @returns The array of all registered mod branding
-         */
-        std::span<const Branding> getBrands() const noexcept;
+        geode::utils::StringMap<Branding> m_brands;  // Array of registered branding images
 
     public:
         // Get branding manager singleton
@@ -70,7 +65,7 @@ namespace branding {
          * @param image Sprite name, sheet frame name, or URL of the image to use as branding on this mod
          * @param type Whether you're using a sprite, spritesheet frame, or external URL as the source of your branding
          */
-        void registerBrand(std::string modId, std::string image, BrandImageType type = BrandImageType::Sprite);
+        void registerBrand(std::string modId, std::string image, Type type = Type::Sprite);
 
         /**
          * Get the branding for a mod
@@ -92,4 +87,8 @@ namespace branding {
          */
         bool doesBrandExist(std::string_view modId, bool checkLocal = false) const noexcept;
     };
+};
+
+namespace cw::brand {  // backwards compat
+    using namespace branding;
 };
