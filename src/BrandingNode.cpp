@@ -28,11 +28,12 @@ BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
     auto b = brand(modId);
-    if (b.isErr()) log::error("Couldn't find branding for mod {}: {}", modId, b.unwrapErr());
+    auto ok = b.isOk();
+    if (!ok) log::error("Couldn't find branding for mod {}: {}", modId, std::move(b).unwrapErr());
 
     m_impl->developer = std::move(dev);
-    m_impl->brand = b.unwrapOrDefault();
     m_impl->container = container;
+    if (ok) m_impl->brand = std::move(b).unwrap();
 
     if (!CCNode::init()) return false;
 
@@ -114,26 +115,26 @@ void BrandingNode::loadBrand() {
         log::debug("Branding lazysprite found");
 
         lazySprite->setID("brand"_spr);
-        lazySprite->setAnchorPoint({1, 0});
-        lazySprite->setPosition({getScaledContentWidth(), 0.f});
+        lazySprite->setAutoResize(true);
 
         addChild(lazySprite);
 
-        lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
-            if (res.isOk()) {
+        lazySprite->setLoadCallback([self = WeakRef(this), lazySprite](Result<> res) {
+            if (auto s = self.lock()) {
+                if (res.isErr()) {
+                    log::error("Failed to load remote or test branding sprite: {}", std::move(res).unwrapErr());
+                    if (s->m_impl->retried) return lazySprite->stopAllActions();
+                    if (!s->m_impl->retried) s->retryRemoteLoad(lazySprite);
+
+                    return;
+                };
+
                 log::info("Loaded remote or test branding sprite");
 
-                lazySprite->setOpacity(m_impl->opacity);
+                lazySprite->setOpacity(s->m_impl->opacity);
                 lazySprite->setAnchorPoint({1, 0});
-                lazySprite->setPosition({getScaledContentWidth(), 0.f});
-                lazySprite->setScale(getImageScale(lazySprite));
-            } else if (res.isErr()) {
-                log::error("Failed to load remote or test branding sprite: {}", res.unwrapErr());
-                if (m_impl->retried) return lazySprite->stopAllActions();
-                if (!m_impl->retried) retryRemoteLoad(lazySprite);
-            } else {
-                log::error("Unknown error when loading or test remote branding sprite");
-                lazySprite->removeMeAndCleanup();
+                lazySprite->setPosition({s->getScaledContentWidth(), 0.f});
+                lazySprite->setScale(s->getImageScale(lazySprite));
             };
         });
 

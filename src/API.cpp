@@ -37,7 +37,7 @@ bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) co
     return false;
 };
 
-void BrandingManager::registerBrand(std::string modId, std::string image, BrandImageType type) {
+void BrandingManager::registerBrand(std::string modId, std::string image, Type type) {
     auto b = Branding(
         std::move(image),
         modId,
@@ -45,10 +45,10 @@ void BrandingManager::registerBrand(std::string modId, std::string image, BrandI
 
     Mod::get()->setSavedValue<matjson::Value>(modId, b.toJSON());
 
-    if (doesBrandExist(b.mod)) {
-        log::error("Could not register branding for {} because one already exists!", b.mod);
+    if (doesBrandExist(modId)) {
+        log::error("Could not register branding for {} because one already exists!", modId);
     } else {
-        log::debug("Registered branding {} of type {} for {}", b.image, static_cast<int>(b.type), b.mod);
+        log::debug("Registered branding {} of type {} for {}", b.image, static_cast<int>(type), b.mod);
         m_brands[std::move(modId)] = std::move(b);
     };
 };
