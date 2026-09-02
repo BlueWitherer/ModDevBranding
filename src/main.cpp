@@ -5,17 +5,18 @@
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 
 using namespace geode::prelude;
+using namespace cw::brand;
 
 namespace str = utils::string;
 
 static const ZStringView urlGeode = "https://geode-sdk.org/mods/";
 
 class $nodeModify(BrandingModPopup, ModPopup) {
-    struct Fields {
-        Ref<MDTextArea> m_textArea = nullptr;
-        BrandingNode* m_branding = nullptr;
+    struct Fields final {
+        Ref<MDTextArea> textArea = nullptr;
+        BrandingNode* branding = nullptr;
 
-        float m_height = 0.f;
+        float height = 0.f;
     };
 
     void modify() {
@@ -28,15 +29,15 @@ class $nodeModify(BrandingModPopup, ModPopup) {
             if (auto brand = BrandingNode::create(md, std::move(username), mod)) {
                 auto f = m_fields.self();
 
-                f->m_textArea = md;
-                f->m_height = md->getScaledContentHeight();
+                f->textArea = md;
+                f->height = md->getScaledContentHeight();
 
                 brand->setPositionX(brand->getPositionX() + 7.794f);
                 brand->setZOrder(-9);
 
-                f->m_branding = brand;
+                f->branding = brand;
 
-                md->addChild(f->m_branding);
+                md->addChild(f->branding);
 
                 log::info("Added brand node for {} by {}", mod, brand->getDeveloper());
             } else {
@@ -61,8 +62,9 @@ class $nodeModify(BrandingModPopup, ModPopup) {
                 if (urlStr.starts_with("http://www.")) urlStr.erase(7, 4);
 
                 auto const split = str::split(urlStr, "/");
-                for (size_t i = 0; i < split.size(); i++)
+                for (size_t i = 0; i < split.size(); i++) {
                     if (split[i] == "github.com" && i + 1 < split.size()) return split[i + 1];
+                };
             };
         };
 
@@ -85,10 +87,10 @@ class $nodeModify(BrandingModPopup, ModPopup) {
     void updateBrandSize(float) {
         auto f = m_fields.self();
 
-        if (f->m_branding && f->m_textArea) {
-            if (f->m_height != f->m_textArea->getScaledContentHeight()) {
-                f->m_branding->loadBrand();
-                f->m_height = f->m_textArea->getScaledContentHeight();
+        if (f->branding && f->textArea) {
+            if (f->height != f->textArea->getScaledContentHeight()) {
+                f->branding->loadBrand();
+                f->height = f->textArea->getScaledContentHeight();
             };
         } else {
             unschedule(schedule_selector(BrandingModPopup::updateBrandSize));

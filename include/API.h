@@ -38,7 +38,7 @@ namespace branding {
          *
          * @returns Constructed matjson object
          */
-        matjson::Value toJSON() const;
+        [[deprecated("Use matjson::Serialize instead")]] matjson::Value toJSON() const;
 
         /**
          * Returns a Branding struct constructed from a matjson object
@@ -47,7 +47,7 @@ namespace branding {
          *
          * @returns Constructed Branding object
          */
-        static geode::Result<Branding> fromJSON(matjson::Value const& v);
+        [[deprecated("Use matjson::Serialize instead")]] static geode::Result<Branding> fromJSON(matjson::Value const& v);
     };
 
     class CW_MODDEVBRANDING_API_DLL BrandingManager final : public cocos2d::CCObject {
@@ -91,4 +91,10 @@ namespace branding {
 
 namespace cw::brand {  // backwards compat
     using namespace branding;
+};
+
+template <>
+struct matjson::Serialize<cw::brand::Branding> final {
+    static geode::Result<cw::brand::Branding> fromJson(matjson::Value const& value);
+    static matjson::Value toJson(cw::brand::Branding const& value);
 };

@@ -9,25 +9,33 @@ using namespace cw::brand;
 
 Branding::Branding(std::string i, std::string m, Type t) : image(std::move(i)), mod(std::move(m)), type(t) {};
 
-matjson::Value Branding::toJSON() const {
-    return matjson::makeObject({
-        {"image", image},
-        {"mod", mod},
-        {"type", static_cast<int>(type)},
-    });
-};
+Result<cw::brand::Branding> matjson::Serialize<cw::brand::Branding>::fromJson(matjson::Value const& value) {
+    if (!value.isObject()) return Err("JSON value is not an object");
 
-Result<Branding> Branding::fromJSON(matjson::Value const& v) {
-    if (!v.isObject()) return Err("JSON value is not an object");
-
-    GEODE_UNWRAP_INTO(std::string image, v["image"].asString());
-    GEODE_UNWRAP_INTO(std::string mod, v["mod"].asString());
-    GEODE_UNWRAP_INTO(unsigned int type, v["type"].asUInt());
+    GEODE_UNWRAP_INTO(std::string image, value["image"].asString());
+    GEODE_UNWRAP_INTO(std::string mod, value["mod"].asString());
+    GEODE_UNWRAP_INTO(unsigned int type, value["type"].asUInt());
 
     return Ok(Branding(
         std::move(image),
         std::move(mod),
-        static_cast<Type>(type)));
+        static_cast<cw::brand::Type>(type)));
+};
+
+matjson::Value matjson::Serialize<cw::brand::Branding>::toJson(Branding const& value) {
+    return matjson::makeObject({
+        {"image", value.image},
+        {"mod", value.mod},
+        {"type", static_cast<int>(value.type)},
+    });
+};
+
+matjson::Value Branding::toJSON() const {
+    return matjson::Serialize<Branding>::toJson(*this);
+};
+
+Result<Branding> Branding::fromJSON(matjson::Value const& v) {
+    return matjson::Serialize<Branding>::fromJson(v);
 };
 
 bool BrandingManager::doesBrandExist(std::string_view modId, bool checkLocal) const noexcept {

@@ -4,30 +4,26 @@
 
 #include <Geode/Geode.hpp>
 
-class BrandingNode final : public cocos2d::CCNode {
-private:
-    class Impl;
-    std::unique_ptr<Impl> m_impl;
+namespace cw::brand {
+    class BrandingNode final : public cocos2d::CCNode {
+    private:
+        struct Impl;
+        std::unique_ptr<Impl> m_impl;
 
-    float getImageScale(cocos2d::CCSprite* sprite) const;
+    protected:
+        BrandingNode();
+        ~BrandingNode();
 
-    bool useLocalBrand() const noexcept;
+        void retryRemoteLoad(geode::LazySprite* sender);
+        void cancelRemoteLoad(CCNode* sender);
 
-    geode::Result<cw::brand::Branding> brand(geode::ZStringView modId) const noexcept;
+        bool init(geode::MDTextArea* container, std::string dev, geode::ZStringView modId);
 
-protected:
-    BrandingNode();
-    ~BrandingNode();
+    public:
+        static BrandingNode* create(geode::MDTextArea* container, std::string dev, geode::ZStringView modId = GEODE_MOD_ID);
 
-    void retryRemoteLoad(geode::LazySprite* sender);
-    void cancelRemoteLoad(CCNode* sender);
+        void loadBrand();
 
-    bool init(geode::MDTextArea* container, std::string dev, geode::ZStringView modId);
-
-public:
-    static BrandingNode* create(geode::MDTextArea* container, std::string dev, geode::ZStringView modId = GEODE_MOD_ID);
-
-    void loadBrand();
-
-    std::string_view getDeveloper() const noexcept;
+        std::string_view getDeveloper() const noexcept;
+    };
 };

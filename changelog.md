@@ -1,8 +1,8 @@
 # v2.1.0 
-- Bumped Geode loader support to `v5.9.0`
+- Bumped Geode loader support to `v5.10.0`
 - Switch standard to **`cw::brand`** namespace in API
 - Added **`cw::brand::Type`** type alias for `BrandImageType`
-- Optimizations
+- Fixes & optimizations
 
 # v2.0.0 
 - Ported to Geometry Dash version `2.2081`

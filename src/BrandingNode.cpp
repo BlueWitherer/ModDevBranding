@@ -5,14 +5,13 @@
 #include <Geode/Geode.hpp>
 
 using namespace geode::prelude;
-using namespace branding;
+using namespace cw::brand;
 
 namespace fs = std::filesystem;
 
-class BrandingNode::Impl final {
-public:
+struct BrandingNode::Impl final {
+    Branding brand;
     std::string developer = "";
-    Branding brand = Branding("", "");
 
     bool retried = false;
 
@@ -21,18 +20,45 @@ public:
     float timeout = static_cast<float>(Mod::get()->getSettingValue<double>("timeout"));
     int64_t opacity = Mod::get()->getSettingValue<int64_t>("opacity");
     bool useWebP = Loader::get()->isModLoaded("prevter.imageplus");
+
+    bool useLocalBrand() const noexcept {
+        if (auto bm = BrandingManager::get()) return bm->doesBrandExist(brand.mod, true);
+        return false;
+    };
+
+    Result<Branding> getBrand(ZStringView modId) const noexcept {
+        if (auto bm = BrandingManager::get()) return bm->getBrand(modId);
+        return Err("BrandingManager not found");
+    };
+
+    float getImageScale(CCSprite* sprite) const noexcept {
+        if (container && sprite) {
+            auto scaleX = container->getScaledContentWidth() / sprite->getScaledContentWidth();
+            auto scaleY = container->getScaledContentHeight() / sprite->getScaledContentHeight();
+
+            auto scale = std::min<float>(scaleX, scaleY);
+            if (scale >= 1.f) scale = 1.f;
+
+            return scale;
+        } else {
+            log::error("Branding container or sprite not found");
+            return 1.f;
+        };
+    };
 };
 
 BrandingNode::BrandingNode() : m_impl(std::make_unique<Impl>()) {};
 BrandingNode::~BrandingNode() {};
 
 bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
-    auto b = brand(modId);
+    auto b = m_impl->getBrand(modId);
+
     auto ok = b.isOk();
     if (!ok) log::error("Couldn't find branding for mod {}: {}", modId, std::move(b).unwrapErr());
 
     m_impl->developer = std::move(dev);
     m_impl->container = container;
+
     if (ok) m_impl->brand = std::move(b).unwrap();
 
     if (!CCNode::init()) return false;
@@ -51,13 +77,13 @@ bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modI
 
 void BrandingNode::loadBrand() {
     setContentSize(m_impl->container->getScaledContentSize());
-    removeAllChildrenWithCleanup(true);
+    removeAllChildren();
 
     log::debug("Loading brand for mod {}", m_impl->brand.mod);
 
     LazySprite* lazySprite = nullptr;
 
-    auto localBrand = useLocalBrand();
+    auto localBrand = m_impl->useLocalBrand();
     if (localBrand) {
         log::debug("Using local brand for mod {}", m_impl->brand.mod);
 
@@ -97,7 +123,7 @@ void BrandingNode::loadBrand() {
             sprite->setOpacity(m_impl->opacity);
             sprite->setAnchorPoint({1, 0});
             sprite->setPosition({getScaledContentWidth(), 0.f});
-            sprite->setScale(getImageScale(sprite));
+            sprite->setScale(m_impl->getImageScale(sprite));
 
             addChild(sprite);
 
@@ -119,23 +145,22 @@ void BrandingNode::loadBrand() {
 
         addChild(lazySprite);
 
-        lazySprite->setLoadCallback([self = WeakRef(this), lazySprite](Result<> res) {
-            if (auto s = self.lock()) {
-                if (res.isErr()) {
-                    log::error("Failed to load remote or test branding sprite: {}", std::move(res).unwrapErr());
-                    if (s->m_impl->retried) return lazySprite->stopAllActions();
-                    if (!s->m_impl->retried) s->retryRemoteLoad(lazySprite);
+        lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
+            if (res.isErr()) {
+                log::error("Failed to load remote or test branding sprite: {}", std::move(res).unwrapErr());
 
-                    return;
-                };
+                if (m_impl->retried) return lazySprite->stopAllActions();
+                if (!m_impl->retried) retryRemoteLoad(lazySprite);
 
-                log::info("Loaded remote or test branding sprite");
-
-                lazySprite->setOpacity(s->m_impl->opacity);
-                lazySprite->setAnchorPoint({1, 0});
-                lazySprite->setPosition({s->getScaledContentWidth(), 0.f});
-                lazySprite->setScale(s->getImageScale(lazySprite));
+                return;
             };
+
+            log::info("Loaded remote or test branding sprite");
+
+            lazySprite->setOpacity(m_impl->opacity);
+            lazySprite->setAnchorPoint({1, 0});
+            lazySprite->setPosition({getScaledContentWidth(), 0.f});
+            lazySprite->setScale(m_impl->getImageScale(lazySprite));
         });
 
         if (m_impl->brand.mod == GEODE_MOD_ID) {
@@ -191,31 +216,6 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
 void BrandingNode::cancelRemoteLoad(CCNode* sender) {
     log::warn("Attempting to cancel remote or test brand image load");
     if (auto lazySprite = typeinfo_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
-};
-
-float BrandingNode::getImageScale(CCSprite* sprite) const {
-    if (m_impl->container && sprite) {
-        auto scaleX = m_impl->container->getScaledContentWidth() / sprite->getScaledContentWidth();
-        auto scaleY = m_impl->container->getScaledContentHeight() / sprite->getScaledContentHeight();
-
-        auto scale = std::min<float>(scaleX, scaleY);
-        if (scale >= 1.f) scale = 1.f;
-
-        return scale;
-    } else {
-        log::error("Branding container or sprite not found");
-        return 1.f;
-    };
-};
-
-Result<Branding> BrandingNode::brand(ZStringView modId) const noexcept {
-    if (auto bm = BrandingManager::get()) return bm->getBrand(modId);
-    return Err("BrandingManager not found");
-};
-
-bool BrandingNode::useLocalBrand() const noexcept {
-    if (auto bm = BrandingManager::get()) return bm->doesBrandExist(m_impl->brand.mod, true);
-    return false;
 };
 
 std::string_view BrandingNode::getDeveloper() const noexcept {
