@@ -44,8 +44,7 @@
                             "*.png",
                             "*.jpg",
                             "*.jpeg",
-                            "*.webp",
-                            "*.gif"
+                            "*.webp"
                         ],
                         "description": "Image Files"
                     }
@@ -66,7 +65,7 @@
                 "arrows": true,
                 "arrow-step": 5.0,
                 "big-arrows": true,
-                "big-arrow-step": 15.0
+                "big-arrow-step": 12.5
             }
         },
         "opacity": {

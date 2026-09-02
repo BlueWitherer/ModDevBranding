@@ -1,4 +1,4 @@
-#include "BrandingNode.h"
+#include "BrandNode.h"
 
 #include <API.h>
 
@@ -9,15 +9,18 @@ using namespace cw::brand;
 
 namespace fs = std::filesystem;
 
-struct BrandingNode::Impl final {
+static constexpr CCPoint g_anchor = {1, 0};
+
+struct BrandNode::Impl final {
     Branding brand;
     std::string developer = "";
 
     bool retried = false;
 
-    Ref<MDTextArea> container = nullptr;
+    Ref<NineSlice> container = nullptr;
+    CCClippingNode* clippingNode = nullptr;
 
-    float timeout = static_cast<float>(Mod::get()->getSettingValue<double>("timeout"));
+    float timeout = Mod::get()->getSettingValue<float>("timeout");
     int64_t opacity = Mod::get()->getSettingValue<int64_t>("opacity");
     bool useWebP = Loader::get()->isModLoaded("prevter.imageplus");
 
@@ -32,52 +35,68 @@ struct BrandingNode::Impl final {
     };
 
     float getImageScale(CCSprite* sprite) const noexcept {
-        if (container && sprite) {
-            auto scaleX = container->getScaledContentWidth() / sprite->getScaledContentWidth();
-            auto scaleY = container->getScaledContentHeight() / sprite->getScaledContentHeight();
+        if (clippingNode && sprite) {
+            auto spriteW = sprite->getScaledContentWidth();
+            auto spriteH = sprite->getScaledContentHeight();
 
-            auto scale = std::min<float>(scaleX, scaleY);
+            if (spriteW <= 0.f || spriteH <= 0.f) {
+                log::error("Sprite has zero or invalid content size");
+                return 1.f;
+            };
+
+            auto x = clippingNode->getScaledContentWidth() / spriteW;
+            auto y = clippingNode->getScaledContentHeight() / spriteH;
+
+            auto scale = std::min(x, y);
             if (scale >= 1.f) scale = 1.f;
 
             return scale;
-        } else {
-            log::error("Branding container or sprite not found");
-            return 1.f;
         };
+
+        log::error("Branding container or sprite not found");
+        return 1.f;
     };
 };
 
-BrandingNode::BrandingNode() : m_impl(std::make_unique<Impl>()) {};
-BrandingNode::~BrandingNode() {};
+BrandNode::BrandNode() : m_impl(std::make_unique<Impl>()) {};
+BrandNode::~BrandNode() {};
 
-bool BrandingNode::init(MDTextArea* container, std::string dev, ZStringView modId) {
+bool BrandNode::init(NineSlice* container, std::string dev, ZStringView modId) {
     auto b = m_impl->getBrand(modId);
 
     auto ok = b.isOk();
     if (!ok) log::error("Couldn't find branding for mod {}: {}", modId, std::move(b).unwrapErr());
 
-    m_impl->developer = std::move(dev);
     m_impl->container = container;
+    m_impl->developer = std::move(dev);
 
     if (ok) m_impl->brand = std::move(b).unwrap();
 
-    if (!CCNode::init()) return false;
-
     m_impl->brand.mod = modId;
 
+    if (!CCNode::init()) return false;
+
     setID("branding"_spr);
-    setAnchorPoint({1, 0});
+    setAnchorPoint(g_anchor);
     setContentSize(container->getScaledContentSize());
-    setPosition({container->getScaledContentWidth(), 0.f});
+
+    m_impl->clippingNode = CCClippingNode::create(container);
+    m_impl->clippingNode->setAnchorPoint({0.5, 0.5});
+    m_impl->clippingNode->setContentSize(getScaledContentSize());
+    m_impl->clippingNode->setAlphaThreshold(0.f);
+
+    addChildAtPosition(m_impl->clippingNode, Anchor::Center);
 
     loadBrand();
 
     return true;
 };
 
-void BrandingNode::loadBrand() {
+void BrandNode::loadBrand() {
     setContentSize(m_impl->container->getScaledContentSize());
-    removeAllChildren();
+
+    m_impl->clippingNode->setContentSize(getScaledContentSize());
+    m_impl->clippingNode->removeAllChildren();
 
     log::debug("Loading brand for mod {}", m_impl->brand.mod);
 
@@ -121,11 +140,10 @@ void BrandingNode::loadBrand() {
 
             sprite->setID("brand"_spr);
             sprite->setOpacity(m_impl->opacity);
-            sprite->setAnchorPoint({1, 0});
-            sprite->setPosition({getScaledContentWidth(), 0.f});
+            sprite->setAnchorPoint(g_anchor);
             sprite->setScale(m_impl->getImageScale(sprite));
 
-            addChild(sprite);
+            m_impl->clippingNode->addChildAtPosition(sprite, Anchor::BottomRight);
 
             log::info("Loaded local branding sprite");
         } else {
@@ -141,9 +159,9 @@ void BrandingNode::loadBrand() {
         log::debug("Branding lazysprite found");
 
         lazySprite->setID("brand"_spr);
-        lazySprite->setAutoResize(true);
+        lazySprite->setAnchorPoint(g_anchor);
 
-        addChild(lazySprite);
+        m_impl->clippingNode->addChildAtPosition(lazySprite, Anchor::BottomRight);
 
         lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
             if (res.isErr()) {
@@ -157,10 +175,11 @@ void BrandingNode::loadBrand() {
 
             log::info("Loaded remote or test branding sprite");
 
+            lazySprite->setAnchorPoint(g_anchor);
             lazySprite->setOpacity(m_impl->opacity);
-            lazySprite->setAnchorPoint({1, 0});
-            lazySprite->setPosition({getScaledContentWidth(), 0.f});
-            lazySprite->setScale(m_impl->getImageScale(lazySprite));
+            lazySprite->setScale(lazySprite->getScale() * m_impl->getImageScale(lazySprite));
+
+            updateLayout();
         });
 
         if (m_impl->brand.mod == GEODE_MOD_ID) {
@@ -192,14 +211,16 @@ void BrandingNode::loadBrand() {
             log::debug("Scheduling image load cancel for {} after {} seconds", reqUrl, m_impl->timeout);
             lazySprite->runAction(CCSequence::createWithTwoActions(
                 CCDelayTime::create(m_impl->timeout),
-                CCCallFuncN::create(this, callfuncN_selector(BrandingNode::cancelRemoteLoad))));
+                CCCallFuncN::create(this, callfuncN_selector(BrandNode::cancelRemoteLoad))));
         };
     } else {
         if (localBrand) log::error("no branding lazysprite created");
     };
+
+    updateLayout();
 };
 
-void BrandingNode::retryRemoteLoad(LazySprite* sender) {
+void BrandNode::retryRemoteLoad(LazySprite* sender) {
     if (sender) {
         m_impl->retried = true;
 
@@ -213,17 +234,17 @@ void BrandingNode::retryRemoteLoad(LazySprite* sender) {
     };
 };
 
-void BrandingNode::cancelRemoteLoad(CCNode* sender) {
+void BrandNode::cancelRemoteLoad(CCNode* sender) {
     log::warn("Attempting to cancel remote or test brand image load");
     if (auto lazySprite = typeinfo_cast<LazySprite*>(sender)) lazySprite->cancelLoad();
 };
 
-std::string_view BrandingNode::getDeveloper() const noexcept {
+std::string_view BrandNode::getDeveloper() const noexcept {
     return m_impl->developer;
 };
 
-BrandingNode* BrandingNode::create(MDTextArea* container, std::string dev, ZStringView modId) {
-    auto ret = new BrandingNode();
+BrandNode* BrandNode::create(NineSlice* container, std::string dev, ZStringView modId) {
+    auto ret = new BrandNode();
     if (ret->init(container, std::move(dev), modId)) {
         ret->autorelease();
         return ret;
