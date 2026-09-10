@@ -85,7 +85,7 @@ bool BrandNode::init(NineSlice* container, std::string dev, ZStringView modId) {
     m_impl->clippingNode->setContentSize(getScaledContentSize());
     m_impl->clippingNode->setAlphaThreshold(0.f);
 
-    addChildAtPosition(m_impl->clippingNode, Anchor::Center);
+    addChildAtPosition(m_impl->clippingNode, Anchor::Center, {7.5f, 0.f});
 
     loadBrand();
 
@@ -143,7 +143,7 @@ void BrandNode::loadBrand() {
             sprite->setAnchorPoint(g_anchor);
             sprite->setScale(m_impl->getImageScale(sprite));
 
-            m_impl->clippingNode->addChildAtPosition(sprite, Anchor::BottomRight);
+            m_impl->clippingNode->addChildAtPosition(sprite, Anchor::BottomRight, {-7.5f, 0.f});
 
             log::info("Loaded local branding sprite");
         } else {
@@ -161,11 +161,11 @@ void BrandNode::loadBrand() {
         lazySprite->setID("brand"_spr);
         lazySprite->setAnchorPoint(g_anchor);
 
-        m_impl->clippingNode->addChildAtPosition(lazySprite, Anchor::BottomRight);
+        m_impl->clippingNode->addChildAtPosition(lazySprite, Anchor::BottomRight, {-7.5f, 0.f});
 
         lazySprite->setLoadCallback([this, lazySprite](Result<> res) {
             if (res.isErr()) {
-                log::error("Failed to load remote or test branding sprite: {}", std::move(res).unwrapErr());
+                log::error("Failed to load remote or test branding sprite: {}", res.unwrapErr());
 
                 if (m_impl->retried) return lazySprite->stopAllActions();
                 if (!m_impl->retried) retryRemoteLoad(lazySprite);

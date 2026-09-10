@@ -51,7 +51,7 @@ void BrandingManager::registerBrand(std::string modId, std::string image, Type t
         modId,
         type);
 
-    Mod::get()->setSavedValue<matjson::Value>(modId, b.toJSON());
+    Mod::get()->setSavedValue<matjson::Value>(modId, b);
 
     if (doesBrandExist(modId)) {
         log::error("Could not register branding for {} because one already exists!", modId);
@@ -63,14 +63,14 @@ void BrandingManager::registerBrand(std::string modId, std::string image, Type t
 
 Result<Branding> BrandingManager::getBrand(std::string_view modId) const {
     if (auto it = m_brands.find(modId); it != m_brands.end()) return Ok(it->second);
-    if (Loader::get()->isModLoaded(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Branding::fromJSON(Mod::get()->getSavedValue<matjson::Value>(modId, Branding("", std::string(modId)).toJSON()));
+    if (Loader::get()->isModLoaded(std::string(modId)) && Mod::get()->hasSavedValue(modId)) return Ok(Mod::get()->getSavedValue<Branding>(modId, Branding("", std::string(modId))));
 
     return Err("Branding not found");
 };
 
 BrandingManager* BrandingManager::get() {
-    static auto inst = new (std::nothrow) BrandingManager();
-    return inst;
+    static BrandingManager inst;
+    return &inst;
 };
 
 Result<> branding::registerBrand(std::string modId, std::string image, Type type) {
