@@ -14,10 +14,10 @@ This mod adds a beautiful branding image from the main developer of a mod or the
 
 ---
 
+> ![❗](frame:geode.loader/info-alert.png?scale=0.375) <cr>*The next section is meant for **developers**. If you have **no Geode index mod development history**, your submission may either be **postponed in review** or **rejected**.*</c>
+
 ### Submit Branding
 **If you're an <cg>*active mod developer*</c>**, you may go to **[moddev.cheeseworks.gay](https://moddev.cheeseworks.gay/)** to access <cg>the dashboard to submit your branding</c>! It will <cy>automatically appear on *all* of your mods</c>. <cr>You will be required to authorize with your [GitHub account](https://www.github.com/login/) to use the website.</c>
-
-> ![❗](frame:geode.loader/info-alert.png?scale=0.375) <cr>*If you have **no Geode index history**, your submission may either be **postponed in review** or **rejected**.*</c>
 
 ### Previewing
 You can use the <cg>**`Test Brand Image`** setting</c> to <cy>preview your branding in-game</c> to see how it looks like before submitting it through the dashboard or applying it through this mod's API!
