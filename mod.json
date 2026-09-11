@@ -8,7 +8,7 @@
     },
     "id": "cheeseworks.moddevbranding",
     "name": "Mod Developer Branding",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "developers": [
         "Cheeseworks"
     ],
@@ -27,7 +27,7 @@
     },
     "api": {
         "include": [
-            "include/*.hpp"
+            "include/*.h*"
         ]
     },
     "settings": {

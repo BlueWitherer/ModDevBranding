@@ -1,3 +1,6 @@
+# v2.1.1 
+- API header hotfix
+
 # v2.1.0 
 - Bumped Geode loader support to `v5.9.0`
 - Added standard namespace **`cw::brand`** to API
